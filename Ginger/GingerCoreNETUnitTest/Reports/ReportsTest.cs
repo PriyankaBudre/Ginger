@@ -71,7 +71,7 @@ namespace Ginger.Reports.Tests
             mOutputFolderPath = TestResources.GetTempFolder("HTMLReports") + Path.DirectorySeparatorChar;
             mTestResourcesPath = TestResources.GetTestResourcesFolder( Path.Combine("Reports", "HTMLReports"));
             //Act
-            string report = ExtensionMethods.NewFunctionCreateGingerExecutionReport(RI, selectedHTMLReportConfiguration, templatesFolder, mOutputFolderPath);
+            string report = ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(RI, selectedHTMLReportConfiguration, templatesFolder, mOutputFolderPath);
 
         }
 

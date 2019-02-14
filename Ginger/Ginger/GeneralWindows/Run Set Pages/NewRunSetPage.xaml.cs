@@ -1454,7 +1454,7 @@ namespace Ginger.Run
        
                     string templatesFolder = (Ginger.Reports.GingerExecutionReport.ExtensionMethods.getGingerEXEFileName() + @"Reports" + Path.DirectorySeparatorChar + "GingerExecutionReport" + Path.DirectorySeparatorChar).Replace("Ginger.exe", "");
                     
-                    reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.NewFunctionCreateGingerExecutionReport(RI, selectedHTMLReportConfiguration, templatesFolder, hTMLOutputFolder);
+                    reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(RI, selectedHTMLReportConfiguration, templatesFolder, hTMLOutputFolder);
                 }
                 else
                 {

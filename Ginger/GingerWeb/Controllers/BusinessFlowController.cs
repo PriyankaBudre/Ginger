@@ -107,7 +107,7 @@ namespace GingerWeb.Controllers
 
             //HTMLReportConfiguration config = new HTMLReportConfiguration();
             HTMLReportConfiguration config = HTMLReportConfiguration.SetHTMLReportConfigurationWithDefaultValues("DefaultTemplate", true);
-            string report = Ginger.Reports.GingerExecutionReport.ExtensionMethods.NewFunctionCreateGingerExecutionReport(RI, config, templatesFolder, hTMLOutputFolder);
+            string report = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(RI, config, templatesFolder, hTMLOutputFolder);
 
 
 

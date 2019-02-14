@@ -2634,32 +2634,32 @@ namespace Ginger.Reports.GingerExecutionReport
         public static string CreateGingerExecutionReport(ReportInfo RI)
         {
             var HTMLReportConfigurations = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<HTMLReportConfiguration>();
-            HTMLReportConfiguration selectedHTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsDefault == true)).FirstOrDefault();
+            HTMLReportConfiguration hTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsDefault == true)).FirstOrDefault();
             HTMLReportsConfiguration currentConf = WorkSpace.Instance.Solution.HTMLReportsConfigurationSetList.Where(x => (x.IsSelected == true)).FirstOrDefault();
+
             string fileName = string.Empty;
             if (RI.ReportInfoRootObject is BusinessFlowReport)
             {
-                fileName = System.IO.Path.GetFileName(((BusinessFlowReport)RI.ReportInfoRootObject).LogFolder);
+                fileName = Path.GetFileName(((BusinessFlowReport)RI.ReportInfoRootObject).LogFolder);
             }
             else if (RI.ReportInfoRootObject is RunSetReport)
             {
-                fileName = System.IO.Path.GetFileName(((RunSetReport)RI.ReportInfoRootObject).LogFolder);
+                fileName = Path.GetFileName(((RunSetReport)RI.ReportInfoRootObject).LogFolder);
             }
 
-            string hTMLOutputFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.GetReportDirectory(currentConf.HTMLReportsFolder + fileName);
-            string templatesFolder = (Ginger.Reports.GingerExecutionReport.ExtensionMethods.getGingerEXEFileName() + @"Reports" + Path.DirectorySeparatorChar + "GingerExecutionReport" + Path.DirectorySeparatorChar).Replace("Ginger.exe", "");
-            string reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.NewFunctionCreateGingerExecutionReport(RI, selectedHTMLReportConfiguration, templatesFolder, hTMLOutputFolder);
+            string hTMLOutputFolder = GetReportDirectory(currentConf.HTMLReportsFolder + fileName);
+            string templatesFolder = (getGingerEXEFileName() + @"Reports" + Path.DirectorySeparatorChar + "GingerExecutionReport" + Path.DirectorySeparatorChar).Replace("Ginger.exe", "");
+            string reportsResultFolder = CreateGingerExecutionReportByReportInfoLevel(RI, hTMLReportConfiguration, templatesFolder, hTMLOutputFolder);
 
 
             return reportsResultFolder;
         }
 
-        public static string NewFunctionCreateGingerExecutionReport(ReportInfo RI,  HTMLReportConfiguration HTMLReportConfiguration, string templatesFolder, string hTMLOutputFolder)
+        public static string CreateGingerExecutionReportByReportInfoLevel(ReportInfo RI,  HTMLReportConfiguration HTMLReportConfiguration, string templatesFolder, string hTMLOutputFolder)
         {
             GingerExecutionReport gingerExecutionReport = new GingerExecutionReport();
             gingerExecutionReport.TemplatesFolder = templatesFolder;
             gingerExecutionReport.currentTemplate = HTMLReportConfiguration;
-
             gingerExecutionReport.HTMLReportMainFolder = hTMLOutputFolder;
            
 
@@ -2674,27 +2674,28 @@ namespace Ginger.Reports.GingerExecutionReport
                     gingerExecutionReport.CreateSummaryViewReport(RI);
                     break;
                 case ReportInfo.ReportInfoLevel.GingerLevel:
-                    gingerExecutionReport.CreateGingerLevelReport((GingerReport)((ReportInfo)RI).ReportInfoRootObject, "", true);
+                    gingerExecutionReport.CreateGingerLevelReport((GingerReport)RI.ReportInfoRootObject, "", true);
                     break;
                 case ReportInfo.ReportInfoLevel.BussinesFlowLevel:
-                    gingerExecutionReport.CreateBusinessFlowLevelReport((BusinessFlowReport)((ReportInfo)RI).ReportInfoRootObject, "", "", true);
+                    gingerExecutionReport.CreateBusinessFlowLevelReport((BusinessFlowReport)RI.ReportInfoRootObject, "", "", true);
                     break;
                 case ReportInfo.ReportInfoLevel.ActivityLevel:
-                    gingerExecutionReport.CreateActivityLevelReport((ActivityReport)((ReportInfo)RI).ReportInfoRootObject, "", "", true);
+                    gingerExecutionReport.CreateActivityLevelReport((ActivityReport)RI.ReportInfoRootObject, "", "", true);
                     break;
                 case ReportInfo.ReportInfoLevel.ActionLevel:
-                    gingerExecutionReport.CreateActionLevelReport((ActionReport)((ReportInfo)RI).ReportInfoRootObject, "", "", true);
+                    gingerExecutionReport.CreateActionLevelReport((ActionReport)RI.ReportInfoRootObject, "", "", true);
                     break;
                 default:
                     return string.Empty;
             }
+
             return gingerExecutionReport.HTMLReportMainFolder;
         }
 
         public static string CreateActivitiesGroupReportsOfBusinessFlow(ProjEnvironment environment, BusinessFlow BF, bool calledFromAutomateTab = false, HTMLReportConfiguration SelectedHTMLReportConfiguration = null, string mHTMLReportsFolder = null)
         {
-            Ginger.Reports.GingerExecutionReport.GingerExecutionReport l = new Ginger.Reports.GingerExecutionReport.GingerExecutionReport();
-            l.TemplatesFolder = (ExtensionMethods.getGingerEXEFileName() + @"Reports\GingerExecutionReport\").Replace("Ginger.exe", "");
+            GingerExecutionReport l = new GingerExecutionReport();
+            l.TemplatesFolder = (getGingerEXEFileName() + @"Reports\GingerExecutionReport\").Replace("Ginger.exe", "");
 
             if (SelectedHTMLReportConfiguration != null)
             {
