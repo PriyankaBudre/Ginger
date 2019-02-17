@@ -65,11 +65,11 @@ namespace Ginger.Reports.Tests
             //Arrange
             string BusinessFlowReportFolder = GingerTestHelper.TestResources.GetTestResourcesFolder(@"Reports" + Path.DirectorySeparatorChar + "AutomationTab_LastExecution" + Path.DirectorySeparatorChar);
             ReportInfo RI = new ReportInfo(BusinessFlowReportFolder);
-            string templatesFolder = Path.Combine(Amdocs.Ginger.Common.GeneralLib.General.GetExecutingDirectory(),"Reports" , "GingerExecutionReport");
+            string templatesFolder = Path.Combine(Amdocs.Ginger.Common.GeneralLib.General.GetExecutingDirectory(), "Reports", "GingerExecutionReport");
             HTMLReportConfiguration selectedHTMLReportConfiguration = HTMLReportConfiguration.SetHTMLReportConfigurationWithDefaultValues("DefaultTemplate", true);
 
             mOutputFolderPath = TestResources.GetTempFolder("HTMLReports") + Path.DirectorySeparatorChar;
-            mTestResourcesPath = TestResources.GetTestResourcesFolder( Path.Combine("Reports", "HTMLReports"));
+            mTestResourcesPath = TestResources.GetTestResourcesFolder(Path.Combine("Reports", "HTMLReports"));
             //Act
             string report = ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(RI, selectedHTMLReportConfiguration, templatesFolder, mOutputFolderPath);
 
@@ -103,8 +103,8 @@ namespace Ginger.Reports.Tests
         {
             //Assert
             string ActivityReportFullPath = "1 Goto SCM URL" + Path.DirectorySeparatorChar + "1 Goto App URL - httpcmitechin" + Path.DirectorySeparatorChar + "ActionReport.html";
-            string ExecutionFile = GetReportWithoutCrteationDate(mOutputFolderPath + Path.DirectorySeparatorChar + ActivityReportFullPath);
-            string TestResourcesFIle = GetReportWithoutCrteationDate(mTestResourcesPath + Path.DirectorySeparatorChar + ActivityReportFullPath);
+            string ExecutionFile = GetReportWithoutCrteationDate(Path.Combine(mOutputFolderPath, ActivityReportFullPath));
+            string TestResourcesFIle = GetReportWithoutCrteationDate(Path.Combine(mTestResourcesPath, ActivityReportFullPath));
 
             Assert.AreEqual(ExecutionFile, TestResourcesFIle);
         }

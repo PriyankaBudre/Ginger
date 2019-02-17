@@ -27,6 +27,7 @@ using Amdocs.Ginger.CoreNET.Utility;
 using Ginger.Run;
 using GingerCore;
 using Amdocs.Ginger.Run;
+using System.IO;
 
 namespace Ginger.Reports
 {
@@ -220,11 +221,13 @@ namespace Ginger.Reports
                         mActivities = new List<ActivityReport>();
                         // TODO: Load in parallel and verify we keep the original order
 
-                        foreach (string folder in System.IO.Directory.GetDirectories(LogFolder))
+
+                        string[] directories = System.IO.Directory.GetDirectories(LogFolder);
+                        foreach (string folder in directories)
                         {
                             try
                             {
-                                ActivityReport AR = (ActivityReport)JsonLib.LoadObjFromJSonFile(folder + @"\Activity.txt", typeof(ActivityReport));
+                                ActivityReport AR = (ActivityReport)JsonLib.LoadObjFromJSonFile(Path.Combine(folder , "Activity.txt"), typeof(ActivityReport));
                                 AR.LogFolder = folder;
                                 if (ActivitiesGroupReports != null)    // !!!!!!!!!!!!!!!!!!!!!!!!
                                 {
@@ -283,7 +286,7 @@ namespace Ginger.Reports
                     mActivitiesGroups = new List<ActivityGroupReport>();
                     try
                     {
-                        string[] linesActivityGroup = System.IO.File.ReadAllLines(LogFolder + @"\ActivityGroups.txt");
+                        string[] linesActivityGroup = System.IO.File.ReadAllLines(Path.Combine(LogFolder , "ActivityGroups.txt"));
                         foreach (string lineActivityGroup in linesActivityGroup)
                         {
                             ActivityGroupReport ARG = (ActivityGroupReport)JsonLib.LoadObjFromJSonString(lineActivityGroup, typeof(ActivityGroupReport));

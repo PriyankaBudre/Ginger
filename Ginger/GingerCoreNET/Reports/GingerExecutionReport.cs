@@ -30,7 +30,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-
 namespace Ginger.Reports.GingerExecutionReport
 {
     public class GingerExecutionReport
@@ -1072,6 +1071,7 @@ namespace Ginger.Reports.GingerExecutionReport
             if (calledAsRoot)
             {
                 BusinessFlowReport.ExecutionLoggerIsEnabled = true;
+
                 BusinessFlowReport.AllIterationElements = currentTemplate.ShowAllIterationsElements;
                 if (string.IsNullOrEmpty(HTMLReportMainFolder))
                 {
@@ -1093,7 +1093,9 @@ namespace Ginger.Reports.GingerExecutionReport
             {
                 currentHTMLReportsFolder = currentHTMLReportsFolder + ExtensionMethods.folderNameNormalazing(BusinessFlowReport.Seq + " " + BusinessFlowReport.Name);
             }
-            System.IO.Directory.CreateDirectory(currentHTMLReportsFolder);
+            Directory.CreateDirectory(currentHTMLReportsFolder);
+
+          
 
             if (StyleBundle == string.Empty || StyleBundle == "")
             {
@@ -1105,7 +1107,7 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             if (CompanyLogo == string.Empty || CompanyLogo == "")
             {
-                CompanyLogo = CreateCompanyLogo();
+                //CompanyLogo = CreateCompanyLogo();
             }
             if (GingerLogo == string.Empty || GingerLogo == "")
             {
@@ -1120,13 +1122,13 @@ namespace Ginger.Reports.GingerExecutionReport
             ReportHTML = ReportHTML.Replace("{ginger_logo}", GingerLogo);
             if (ReportJS == string.Empty || ReportJS == "")
             {
-                ReportJS = ExtensionMethods.GetHTMLTemplate("circlechart.js", TemplatesFolder + "/assets/js/");
+                ReportJS = ExtensionMethods.GetHTMLTemplate("circlechart.js",Path.Combine(TemplatesFolder , "assets","js"));
             }
             if (currentTemplate.UseLocalStoredStyling)
             {
                 if (ReportsCSS == string.Empty || ReportsCSS == "")
                 {
-                    ReportsCSS = ExtensionMethods.GetHTMLTemplate("Styles.css", TemplatesFolder + "/assets/css/");
+                    ReportsCSS = ExtensionMethods.GetHTMLTemplate("Styles.css", Path.Combine(TemplatesFolder, "assets", "css"));
                 }
             }
             // running on all selected fields and getting this fields names AND values from the Report file (both into separate html-table string)
@@ -1134,7 +1136,9 @@ namespace Ginger.Reports.GingerExecutionReport
             StringBuilder fieldsValuesHTMLTableCells = new StringBuilder();
             StringBuilder fieldPerecentHTMLTableCells = new StringBuilder();
 
-            foreach (HTMLReportConfigFieldToSelect selectedField in currentTemplate.BusinessFlowFieldsToSelect.Where(x => (x.IsSelected == true && x.FieldType == Ginger.Reports.FieldsType.Field.ToString())))
+            List<HTMLReportConfigFieldToSelect>  SelectedFields = currentTemplate.BusinessFlowFieldsToSelect.Where(x => x.IsSelected == true && x.FieldType == Ginger.Reports.FieldsType.Field.ToString()).ToList();
+
+            foreach (HTMLReportConfigFieldToSelect selectedField in SelectedFields)
             {
                 fieldsNamesHTMLTableCells.Append("<td>" + selectedField.FieldName + "</td>");
                 if (((BusinessFlowReport)BusinessFlowReport).GetType().GetProperty(selectedField.FieldKey.ToString()).GetValue(((BusinessFlowReport)BusinessFlowReport)) == null)
@@ -1210,6 +1214,9 @@ namespace Ginger.Reports.GingerExecutionReport
                 ReportHTML = ReportHTML.Replace(prevBusinessFlowLink, "");
             }
 
+     
+
+
             ReportHTML = ReportHTML.Replace("{Parent_BusinessFlow_Name}", currentBusinessFlowLinkText);
             ReportHTML = ReportHTML.Replace("{BusinessFlow_Headers}", fieldsNamesHTMLTableCells.ToString());
             ReportHTML = ReportHTML.Replace("{BusinessFlow_Data}", fieldsValuesHTMLTableCells.ToString());
@@ -1222,9 +1229,14 @@ namespace Ginger.Reports.GingerExecutionReport
             fieldsNamesHTMLTableCells.Remove(0, fieldsNamesHTMLTableCells.Length);
             fieldsValuesHTMLTableCells.Remove(0, fieldsValuesHTMLTableCells.Length);
             fieldPerecentHTMLTableCells.Remove(0, fieldPerecentHTMLTableCells.Length);
+
+
+            List<HTMLReportConfigFieldToSelect> BusinessFlowFieldsSelectedFields = currentTemplate.BusinessFlowFieldsToSelect.Where(x => x.FieldType == FieldsType.Section.ToString()).ToList();
+
             // adding Sections
-            foreach (HTMLReportConfigFieldToSelect selectedField in currentTemplate.BusinessFlowFieldsToSelect.Where(x => (x.FieldType == Ginger.Reports.FieldsType.Section.ToString())))
+            foreach (HTMLReportConfigFieldToSelect selectedField in BusinessFlowFieldsSelectedFields)
             {
+
                 if ((selectedField.FieldKey == BusinessFlowReport.Fields.SolutionVariablesDetails) && (selectedField.IsSelected == true))
                 {
                     ReportHTML = ReportHTML.Replace("<!--Section_PlaceHolder_SolutionVariablesDetails-->",
@@ -1244,6 +1256,9 @@ namespace Ginger.Reports.GingerExecutionReport
                 {
                     if (!selectedField.IsSelected)
                     {
+
+                       
+
                         string activitiesDetailsSection = ExtensionMethods.GetStringBetween(ReportHTML, "<!--ActivitiesDetails_Start-->", "<!--ActivitiesDetails_End-->");
                         ReportHTML = ReportHTML.Replace(activitiesDetailsSection, "");
 
@@ -1272,6 +1287,7 @@ namespace Ginger.Reports.GingerExecutionReport
                     }
                     else
                     {
+
                         ReportHTML = ReportHTML.Replace("{PassPercent}", BusinessFlowReport.PassPercent.ToString());
                         ReportHTML = ReportHTML.Replace("{FailPercent}", BusinessFlowReport.FailPercent.ToString());
                         ReportHTML = ReportHTML.Replace("{StoppedPercent}", BusinessFlowReport.StoppedPercent.ToString());
@@ -1287,12 +1303,19 @@ namespace Ginger.Reports.GingerExecutionReport
                         {
                             fieldsNamesHTMLTableCells.Append("<td>" + selectedField_internal.FieldName + "</td>");
                         }
-                        foreach (ActivityReport ac in BusinessFlowReport.Activities.OrderBy(x => x.Seq))
+
+                        List<ActivityReport> OrderByActivitiesList = BusinessFlowReport.Activities.OrderBy(x => x.Seq).ToList();
+
+                        foreach (ActivityReport ac in OrderByActivitiesList)
                         {
+
                             ac.AllIterationElements = currentTemplate.ShowAllIterationsElements;
 
                             fieldsValuesHTMLTableCells.Append("<tr>");
-                            foreach (HTMLReportConfigFieldToSelect selectedField_internal in currentTemplate.ActivityFieldsToSelect.Where(x => (x.IsSelected == true && x.FieldName != "ScreenShot" && x.FieldType == Ginger.Reports.FieldsType.Field.ToString())))
+
+                            List<HTMLReportConfigFieldToSelect> ActivityFieldsSelectedList = currentTemplate.ActivityFieldsToSelect.Where(x => (x.IsSelected == true && x.FieldName != "ScreenShot" && x.FieldType == Ginger.Reports.FieldsType.Field.ToString())).ToList();
+
+                            foreach (HTMLReportConfigFieldToSelect selectedField_internal in ActivityFieldsSelectedList)
                             {
                                 if (ac.GetType().GetProperty(selectedField_internal.FieldKey.ToString()).GetValue(ac) == null)
                                 {
@@ -1343,6 +1366,7 @@ namespace Ginger.Reports.GingerExecutionReport
                                     }
                                 }
                             }
+
                             lastActivity = ExtensionMethods.folderNameNormalazing(ac.Seq + " " + ac.ActivityName);
                             fieldsValuesHTMLTableCells.Append("</tr>");
                             fieldsValuesHTMLTableCells.Append("<tr id='Activity" + lastseq + "Collapse' class='collapse'><td colspan='10' style='padding-left:40px'><table class='table table-striped table-bordered table-hover'>");
@@ -1415,6 +1439,9 @@ namespace Ginger.Reports.GingerExecutionReport
                                 fieldsValuesHTMLTableCells.Append("</tr>");
                             }
                             fieldsValuesHTMLTableCells.Append("</table></td></tr>");
+
+                            
+
                             if (currentTemplate.ReportLowerLevelToShow != HTMLReportConfiguration.ReportsLevel.BusinessFlowLevel.ToString())
                             {
                                 string prevActivitySeq = string.Empty;
@@ -1431,11 +1458,11 @@ namespace Ginger.Reports.GingerExecutionReport
                                     nextActivityName = BusinessFlowReport.Activities[BusinessFlowReport.Activities.IndexOf(ac) + 1].ActivityName;
                                     nextActivitySeq = BusinessFlowReport.Activities[BusinessFlowReport.Activities.IndexOf(ac) + 1].Seq.ToString();
                                 }
-
                                 CreateActivityLevelReport(ac, currentHTMLReportsFolder, ReportLevel + "../", false, new Tuple<Tuple<string, string>, Tuple<string, string>>(new Tuple<string, string>(prevActivitySeq, prevActivityName), new Tuple<string, string>(nextActivitySeq, nextActivityName)));
                             }
                         }
                     }
+
                     ReportHTML = ReportHTML.Replace("{ActivitiesIscollapse}", selectedField.IsSectionCollapsed ? "collapse" : "collapse in");
                     ReportHTML = ReportHTML.Replace("{ActivitiesStyle}", selectedField.IsSectionCollapsed ? "ace-icon fa fa-angle-right bigger202" : "ace-icon fa fa-angle-down bigger202");
                 }
@@ -1472,8 +1499,8 @@ namespace Ginger.Reports.GingerExecutionReport
             fieldsNamesHTMLTableCells.Remove(0, fieldsNamesHTMLTableCells.Length);
             fieldsValuesHTMLTableCells.Remove(0, fieldsValuesHTMLTableCells.Length);
             // Save the HTML            
-            string FileName = currentHTMLReportsFolder + @"\BusinessFlowReport.html";
-            System.IO.File.WriteAllText(FileName, ReportHTML);
+            string FileName =Path.Combine( currentHTMLReportsFolder , "BusinessFlowReport.html");
+            File.WriteAllText(FileName, ReportHTML);
 
             BusinessFlowReport = null;
             ReportHTML = null;
@@ -1488,7 +1515,7 @@ namespace Ginger.Reports.GingerExecutionReport
                 {
                     if (currentTemplate.ReportLowerLevelToShow != HTMLReportConfiguration.ReportsLevel.ActivityGroupLevel.ToString())
                     {
-                        HTMLReportMainFolder = currentHTMLReportsFolder + @"\" + ExtensionMethods.folderNameNormalazing(ag.Seq + " " + ag.Name);
+                        HTMLReportMainFolder = Path.Combine( currentHTMLReportsFolder , ExtensionMethods.folderNameNormalazing(ag.Seq + " " + ag.Name));
 
                         string prevActivitiesGroupSeq = string.Empty;
                         string nextActivitiesGroupSeq = string.Empty;
@@ -1509,12 +1536,12 @@ namespace Ginger.Reports.GingerExecutionReport
 
                         try
                         {
-                            BF.ActivitiesGroups.Where(x => x.Guid.ToString() == ag.SourceGuid).FirstOrDefault().TempReportFolder = currentHTMLReportsFolder + @"\" + ExtensionMethods.folderNameNormalazing(ag.Seq + " " + ag.Name);
+                            BF.ActivitiesGroups.Where(x => x.Guid.ToString() == ag.SourceGuid).FirstOrDefault().TempReportFolder = Path.Combine(currentHTMLReportsFolder , ExtensionMethods.folderNameNormalazing(ag.Seq + " " + ag.Name));
                         }
                         catch { }
                         foreach (ActivityReport ac in BusinessFlowReport.Activities.Where(x => ag.ExecutedActivitiesGUID.Select(y => y.ToString()).Contains(x.SourceGuid)).OrderBy(x => x.Seq))
                         {
-                            CreateActivityLevelReport(ac, currentHTMLReportsFolder + @"\" + ExtensionMethods.folderNameNormalazing(ag.Seq + " " + ag.Name), ReportLevel + "../");
+                            CreateActivityLevelReport(ac, Path.Combine(currentHTMLReportsFolder ,ExtensionMethods.folderNameNormalazing(ag.Seq + " " + ag.Name)), ReportLevel + "../");
                         }
                     }
                 }
@@ -1547,7 +1574,7 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             else
             {
-                currentHTMLReportsFolder = currentHTMLReportsFolder + @"\ActivityGroups\" + ExtensionMethods.folderNameNormalazing(ActivityGroupReport.Seq + " " + ActivityGroupReport.Name);
+                currentHTMLReportsFolder = Path.Combine(currentHTMLReportsFolder ,"ActivityGroups" , ExtensionMethods.folderNameNormalazing(ActivityGroupReport.Seq + " " + ActivityGroupReport.Name));
             }
             System.IO.Directory.CreateDirectory(currentHTMLReportsFolder);
 
@@ -1824,7 +1851,7 @@ namespace Ginger.Reports.GingerExecutionReport
                                                     ScreenshotCount++;
                                                 }
                                             }
-                                            Tuple<int, int> sizesPreview = General.RecalculatingSizeWithKeptRatio(General.GetImageHeightWidth(act.LogFolder + @"\ScreenShot_" + act.Seq.ToString() + "_" + ScreenshotCount + ".png"), screenShotSampleWidth, screenShotSampleHight);
+                                            Tuple<int, int> sizesPreview = General.RecalculatingSizeWithKeptRatio(General.GetImageHeightWidth(Path.Combine(act.LogFolder ,"ScreenShot_" + act.Seq.ToString() + "_" + ScreenshotCount + ".png")), screenShotSampleWidth, screenShotSampleHight);
                                             string id_str = @"ScreenShot_" + ExtensionMethods.folderNameNormalazing(act.GetType().GetProperty(ActionReport.Fields.Description).GetValue(act).ToString()) + act.Seq.ToString() + "_" + ScreenshotCount;
                                             fieldsValuesHTMLTableCells.Append(@"<td align='center'><img style='display:block;' src='" + @"..\..\" + lastActivity + "\\" + ExtensionMethods.folderNameNormalazing(act.GetType().GetProperty(ActionReport.Fields.Seq).GetValue(act) + " " + act.GetType().GetProperty(ActionReport.Fields.Description).GetValue(act).ToString()) + @"\Screenshots\ScreenShot_" + act.Seq.ToString() + "_" + ScreenshotCount + ".png' alt='" + act.Description + " - Action - Screenshot" + "' width='" + sizesPreview.Item1.ToString() + "' height='" + sizesPreview.Item2.ToString() + "' id='" + id_str + "' onclick='show_modal(\"" + id_str + "\")'></img></td>");
                                         }
@@ -1860,7 +1887,7 @@ namespace Ginger.Reports.GingerExecutionReport
             fieldsNamesHTMLTableCells.Remove(0, fieldsNamesHTMLTableCells.Length);
             fieldsValuesHTMLTableCells.Remove(0, fieldsValuesHTMLTableCells.Length);
             // Save the HTML            
-            string FileName = currentHTMLReportsFolder + @"\ActivityGroupReport.html";
+            string FileName =Path.Combine( currentHTMLReportsFolder , "ActivityGroupReport.html");
             System.IO.File.WriteAllText(FileName, ReportHTML);
 
             BusinessFlowReport = null;
@@ -1894,9 +1921,9 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             else
             {
-                currentHTMLReportsFolder = currentHTMLReportsFolder + @"\" + ExtensionMethods.folderNameNormalazing(ActivityReport.Seq + " " + ActivityReport.ActivityName);
+                currentHTMLReportsFolder = Path.Combine( currentHTMLReportsFolder , ExtensionMethods.folderNameNormalazing(ActivityReport.Seq + " " + ActivityReport.ActivityName));
             }
-            System.IO.Directory.CreateDirectory(currentHTMLReportsFolder);
+            Directory.CreateDirectory(currentHTMLReportsFolder);
 
             if (StyleBundle == string.Empty || StyleBundle == "")
             {
@@ -1908,7 +1935,7 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             if (CompanyLogo == string.Empty || CompanyLogo == "")
             {
-                CompanyLogo = CreateCompanyLogo();
+                //CompanyLogo = CreateCompanyLogo();
             }
             if (GingerLogo == string.Empty || GingerLogo == "")
             {
@@ -2140,7 +2167,7 @@ namespace Ginger.Reports.GingerExecutionReport
                                                 ScreenshotCount++;
                                             }
                                         }
-                                        Tuple<int, int> sizesPreview = General.RecalculatingSizeWithKeptRatio(General.GetImageHeightWidth(act.LogFolder + @"\ScreenShot_" + act.Seq.ToString() + "_" + ScreenshotCount + ".png"), screenShotSampleWidth, screenShotSampleHight);
+                                        Tuple<int, int> sizesPreview = General.RecalculatingSizeWithKeptRatio(General.GetImageHeightWidth(Path.Combine(act.LogFolder ,"ScreenShot_" + act.Seq.ToString() + "_" + ScreenshotCount + ".png")), screenShotSampleWidth, screenShotSampleHight);
                                         string id_str = @"ScreenShot_" + ExtensionMethods.folderNameNormalazing(act.GetType().GetProperty(ActionReport.Fields.Description).GetValue(act).ToString()) + act.Seq.ToString() + "_" + ScreenshotCount;
                                         fieldsValuesHTMLTableCells.Append(@"<td align='center'><img style='display:block;' src='" + ExtensionMethods.folderNameNormalazing(act.GetType().GetProperty(ActionReport.Fields.Seq).GetValue(act) + " " + act.GetType().GetProperty(ActionReport.Fields.Description).GetValue(act).ToString()) + @"\Screenshots\ScreenShot_" + act.Seq.ToString() + "_" + ScreenshotCount + ".png' alt='" + act.Description + " - Action - Screenshot" + "' width='" + sizesPreview.Item1.ToString() + "' height='" + sizesPreview.Item2.ToString() + "' id='" + id_str + "' onclick='show_modal(\"" + id_str + "\")'></img></td>");
                                     }
@@ -2194,7 +2221,7 @@ namespace Ginger.Reports.GingerExecutionReport
             fieldsNamesHTMLTableCells.Remove(0, fieldsNamesHTMLTableCells.Length);
             fieldsValuesHTMLTableCells.Remove(0, fieldsValuesHTMLTableCells.Length);
             // Save the HTML            
-            string FileName = currentHTMLReportsFolder + @"\ActivityReport.html";
+            string FileName = Path.Combine( currentHTMLReportsFolder ,"ActivityReport.html");
             System.IO.File.WriteAllText(FileName, ReportHTML);
 
             ActivityReport = null;
@@ -2214,7 +2241,7 @@ namespace Ginger.Reports.GingerExecutionReport
                                                      .Replace("{date_to_replace}", DateTime.Now.ToString("MMddyyyy_HHmmss"))
                                                      .Replace("{objectType_to_replace}", typeof(ActionReport).Name.ToString()));
                 currentHTMLReportsFolder = HTMLReportMainFolder;
-                System.IO.Directory.CreateDirectory(currentHTMLReportsFolder + @"\Screenshots\");
+                System.IO.Directory.CreateDirectory(Path.Combine(currentHTMLReportsFolder , "Screenshots"));
                 ReportLevel = "./";
                 StyleBundle = string.Empty;
                 JSBundle = string.Empty;
@@ -2226,8 +2253,10 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             else
             {
-                currentHTMLReportsFolder = currentHTMLReportsFolder + @"\" + ExtensionMethods.folderNameNormalazing(ActionReport.Seq + " " + ActionReport.Description);
+                currentHTMLReportsFolder =Path.Combine( currentHTMLReportsFolder , ExtensionMethods.folderNameNormalazing(ActionReport.Seq + " " + ActionReport.Description));
                 System.IO.Directory.CreateDirectory(currentHTMLReportsFolder);
+                //Console.WriteLine("Directory Created at:" + currentHTMLReportsFolder);
+                //return;
             }
 
             if (StyleBundle == string.Empty || StyleBundle == "")
@@ -2240,7 +2269,7 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             if (CompanyLogo == string.Empty || CompanyLogo == "")
             {
-                CompanyLogo = CreateCompanyLogo();
+                //CompanyLogo = CreateCompanyLogo();
             }
             if (GingerLogo == string.Empty || GingerLogo == "")
             {
@@ -2382,8 +2411,8 @@ namespace Ginger.Reports.GingerExecutionReport
                         {
                             try
                             {
-                                System.IO.Directory.CreateDirectory(currentHTMLReportsFolder + @"\Screenshots");
-                                System.IO.File.Copy(txt_file, currentHTMLReportsFolder + @"\Screenshots\" + fileName, true);
+                                System.IO.Directory.CreateDirectory(Path.Combine(currentHTMLReportsFolder , "Screenshots"));
+                                System.IO.File.Copy(txt_file, Path.Combine(currentHTMLReportsFolder ,"Screenshots" , fileName), true);
                                 screenshotCount++;
                             }
                             catch
@@ -2391,8 +2420,8 @@ namespace Ginger.Reports.GingerExecutionReport
                                 System.Threading.Thread.Sleep(500);
                                 try
                                 {
-                                    System.IO.Directory.CreateDirectory(currentHTMLReportsFolder + @"\Screenshots");
-                                    System.IO.File.Copy(txt_file, currentHTMLReportsFolder + @"\Screenshots\" + fileName, true);
+                                    System.IO.Directory.CreateDirectory(Path.Combine(currentHTMLReportsFolder, "Screenshots"));
+                                    System.IO.File.Copy(txt_file, Path.Combine(currentHTMLReportsFolder, "Screenshots", fileName), true);
                                     screenshotCount++;
                                 }
                                 catch { }
@@ -2401,7 +2430,7 @@ namespace Ginger.Reports.GingerExecutionReport
                     }
                     if (screenshotCount > 0)
                     {
-                        foreach (string txt_file in System.IO.Directory.GetFiles(currentHTMLReportsFolder + @"\Screenshots\"))
+                        foreach (string txt_file in System.IO.Directory.GetFiles(Path.Combine(currentHTMLReportsFolder ,"Screenshots")))
                         {
                             fileName = System.IO.Path.GetFileName(txt_file);
                             if (fileName.Contains("ScreenShot_"))
@@ -2419,8 +2448,8 @@ namespace Ginger.Reports.GingerExecutionReport
                 }
             }
             // Save the HTML            
-            string FileName = currentHTMLReportsFolder + @"\ActionReport.html";
-            System.IO.File.WriteAllText(FileName, ReportHTML);
+            string FileName =Path.Combine( currentHTMLReportsFolder , "ActionReport.html");
+            File.WriteAllText(FileName, ReportHTML);
 
             ActionReport = null;
             ReportHTML = null;
@@ -2491,7 +2520,7 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             else
             {
-                Image Logoimage=Bitmap.FromFile((Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/images/" + "@BeatLogo.jpg"));
+                Image Logoimage=Bitmap.FromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) , "images" , "@BeatLogo.jpg"));
                 //beatSource.
                 Tuple<int, int> sizes=General.RecalculatingSizeWithKeptRatio(Logoimage, logoWidth, logoHight);
 
@@ -2509,7 +2538,7 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             else
             {
-                Image gingerSource =  Bitmap.FromFile((Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +"/images/" +"@GingerLogo_lowRes.jpg"));
+                Image gingerSource =  Bitmap.FromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "images" ,"GingerLogo_lowRes.jpg"));
                 Tuple<int, int> sizes = General.RecalculatingSizeWithKeptRatio(gingerSource, logoWidth, logoHight);
                 gingerLogo = "<img alt='Embedded Image' width='" + sizes.Item1.ToString() + "' height='" + sizes.Item2.ToString() + "' src='" + "data:image/png;base64," + General.ImagetoBase64String(gingerSource) + "' style='float:right;padding-left:70px' />";
             }
@@ -2579,9 +2608,9 @@ namespace Ginger.Reports.GingerExecutionReport
                 //1. copy the assets folder from installation folder to the root report folder
                 //2. convert logos back to images and place them in the assets or logos/images
                 //3. update links and style to be relative to the above       
-                if (!Directory.Exists(HTMLReportMainFolder + "/assets"))
+                if (!Directory.Exists(Path.Combine(HTMLReportMainFolder , "assets")))
                 {
-                    General.DirectoryCopy(TemplatesFolder + "/assets/", HTMLReportMainFolder + "/assets", true);
+                    General.DirectoryCopy(Path.Combine(TemplatesFolder , "assets"), Path.Combine(HTMLReportMainFolder , "assets"), true);
                 }
                 mStyleBundle.Append(@"<style>@font-face {font-family:Source Sans Pro;src: url('{ReportLevel}assets/fonts/SourceSansPro-Regular.ttf');}</style>");
                 mStyleBundle.Append(@"<link rel='stylesheet' href='{ReportLevel}assets/css/bootstrap.css' />");
@@ -2648,7 +2677,7 @@ namespace Ginger.Reports.GingerExecutionReport
             }
 
             string hTMLOutputFolder = GetReportDirectory(currentConf.HTMLReportsFolder + fileName);
-            string templatesFolder = (getGingerEXEFileName() + @"Reports" + Path.DirectorySeparatorChar + "GingerExecutionReport" + Path.DirectorySeparatorChar).Replace("Ginger.exe", "");
+            string templatesFolder = Path.Combine(getGingerEXEFileName() , "Reports","GingerExecutionReport").Replace("Ginger.exe", "");
             string reportsResultFolder = CreateGingerExecutionReportByReportInfoLevel(RI, hTMLReportConfiguration, templatesFolder, hTMLOutputFolder);
 
 
@@ -2695,7 +2724,7 @@ namespace Ginger.Reports.GingerExecutionReport
         public static string CreateActivitiesGroupReportsOfBusinessFlow(ProjEnvironment environment, BusinessFlow BF, bool calledFromAutomateTab = false, HTMLReportConfiguration SelectedHTMLReportConfiguration = null, string mHTMLReportsFolder = null)
         {
             GingerExecutionReport l = new GingerExecutionReport();
-            l.TemplatesFolder = (getGingerEXEFileName() + @"Reports\GingerExecutionReport\").Replace("Ginger.exe", "");
+            l.TemplatesFolder = Path.Combine(getGingerEXEFileName() ,"Reports","GingerExecutionReport").Replace("Ginger.exe", "");
 
             if (SelectedHTMLReportConfiguration != null)
             {
@@ -2751,7 +2780,7 @@ namespace Ginger.Reports.GingerExecutionReport
         public static string GetHTMLTemplate(string HTMLFileName, string TemplatesFolder)
         {
             string htmlfile = Path.Combine(TemplatesFolder ,HTMLFileName);
-            string HTML = System.IO.File.ReadAllText(htmlfile);
+            string HTML = File.ReadAllText(htmlfile);
             return HTML;
         }
 
@@ -2782,7 +2811,7 @@ namespace Ginger.Reports.GingerExecutionReport
 
         public static void CleanDirectory(string folderName)
         {
-            System.IO.DirectoryInfo di = new DirectoryInfo(folderName);
+            DirectoryInfo di = new DirectoryInfo(folderName);
 
             try
             {
@@ -2819,7 +2848,7 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             catch (Exception)
             {
-                logsFolder = System.IO.Path.Combine(WorkSpace.Instance.Solution.Folder, @"HTMLReports\");
+                logsFolder = Path.Combine(WorkSpace.Instance.Solution.Folder, "HTMLReports");
                 System.IO.Directory.CreateDirectory(logsFolder);
                 WorkSpace.Instance.Solution.ExecutionLoggerConfigurationSetList.Where(x => (x.IsSelected == true)).FirstOrDefault().ExecutionLoggerConfigurationHTMLReportsFolder = @"~\HTMLReports\";
             }

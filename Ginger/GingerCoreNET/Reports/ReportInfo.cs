@@ -172,31 +172,31 @@ namespace Ginger.Reports
                 switch (txtFileName)
                 {
                     case "RunSet.txt":
-                        curFileWithPath = folder + @"\RunSet.txt";
+                        curFileWithPath = Path.Combine(folder , "RunSet.txt");
                         ReportInfoRootObject = (RunSetReport)JsonLib.LoadObjFromJSonFile(curFileWithPath, typeof(RunSetReport));
                         ((RunSetReport)ReportInfoRootObject).LogFolder = folder;
                         reportInfoLevel = ReportInfo.ReportInfoLevel.RunSetLevel;
                         break;
                     case "Ginger.txt":
-                        curFileWithPath = folder + @"\Ginger.txt";
+                        curFileWithPath = Path.Combine(folder , "Ginger.txt");
                         ReportInfoRootObject = (GingerReport)JsonLib.LoadObjFromJSonFile(curFileWithPath, typeof(GingerReport));
                         ((GingerReport)ReportInfoRootObject).LogFolder = folder;
                         reportInfoLevel = ReportInfo.ReportInfoLevel.GingerLevel;
                         break;
                     case "BusinessFlow.txt":
-                        curFileWithPath = folder + @"\BusinessFlow.txt";
+                        curFileWithPath = Path.Combine( folder, "BusinessFlow.txt");
                         ReportInfoRootObject = (BusinessFlowReport)JsonLib.LoadObjFromJSonFile(curFileWithPath, typeof(BusinessFlowReport));
                         ((BusinessFlowReport)ReportInfoRootObject).LogFolder = folder;
                         reportInfoLevel = ReportInfo.ReportInfoLevel.BussinesFlowLevel;
                         break;
                     case "Activity.txt":
-                        curFileWithPath = folder + @"\Activity.txt";
+                        curFileWithPath = Path.Combine(folder , "Activity.txt");
                         ReportInfoRootObject = (ActivityReport)JsonLib.LoadObjFromJSonFile(curFileWithPath, typeof(ActivityReport));
                         ((ActivityReport)ReportInfoRootObject).LogFolder = folder;
                         reportInfoLevel = ReportInfo.ReportInfoLevel.ActivityLevel;
                         break;
                     case "Action.txt":
-                        curFileWithPath = folder + @"\Action.txt";
+                        curFileWithPath = Path.Combine(folder , "Action.txt");
                         ReportInfoRootObject = (ActionReport)JsonLib.LoadObjFromJSonFile(curFileWithPath, typeof(ActionReport));
                         ((ActionReport)ReportInfoRootObject).LogFolder = folder;
                         reportInfoLevel = ReportInfo.ReportInfoLevel.ActionLevel;
