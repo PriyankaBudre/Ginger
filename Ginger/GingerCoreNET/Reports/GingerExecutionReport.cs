@@ -698,7 +698,7 @@ namespace Ginger.Reports.GingerExecutionReport
 
         public void CreateGingerLevelReport(GingerReport gr, string ReportLevel, bool calledAsRoot = false, Tuple<Tuple<string, string>, Tuple<string, string>> nextPrevGingerName = null)
         {
-            string currentHTMLReportsFolder = HTMLReportMainFolder + @"\" + ExtensionMethods.folderNameNormalazing(gr.Seq + " " + gr.Name) + @"\";
+            string currentHTMLReportsFolder = Path.Combine( HTMLReportMainFolder , ExtensionMethods.folderNameNormalazing(gr.Seq + " " + gr.Name) );
             System.IO.Directory.CreateDirectory(currentHTMLReportsFolder);
 
             string lastseq = string.Empty;
@@ -1415,7 +1415,7 @@ namespace Ginger.Reports.GingerExecutionReport
                                                 }
                                             }
 
-                                            Tuple<int, int> sizesPreview = General.RecalculatingSizeWithKeptRatio(General.GetImageHeightWidth(act.LogFolder + @"\ScreenShot_" + act.Seq.ToString() + "_" + ScreenshotCount + ".png"), screenShotSampleWidth, screenShotSampleHight);
+                                            Tuple<int, int> sizesPreview = General.RecalculatingSizeWithKeptRatio(General.GetImageHeightWidth(Path.Combine(act.LogFolder , "ScreenShot_" + act.Seq.ToString() + "_" + ScreenshotCount + ".png")), screenShotSampleWidth, screenShotSampleHight);
                                             string id_str = @"ScreenShot_" + ExtensionMethods.folderNameNormalazing(act.GetType().GetProperty(ActionReport.Fields.Description).GetValue(act).ToString()) + act.Seq.ToString() + "_" + ScreenshotCount;
                                             fieldsValuesHTMLTableCells.Append(@"<td align='center'><img style='display:block;' src='" + @".\" + lastActivity + "\\" + ExtensionMethods.folderNameNormalazing(act.GetType().GetProperty(ActionReport.Fields.Seq).GetValue(act) + " " + act.GetType().GetProperty(ActionReport.Fields.Description).GetValue(act).ToString()) + @"\Screenshots\ScreenShot_" + act.Seq.ToString() + "_" + ScreenshotCount + ".png' alt='" + act.Description + " - Action - Screenshot" + "' width='" + sizesPreview.Item1.ToString() + "' height='" + sizesPreview.Item2.ToString() + "' id='" + id_str + "' onclick='show_modal(\"" + id_str + "\")'></img></td>");
                                         }
@@ -1959,13 +1959,13 @@ namespace Ginger.Reports.GingerExecutionReport
             ReportHTML = ReportHTML.Replace("{ginger_logo}", GingerLogo);
             if (ReportJS == string.Empty || ReportJS == "")
             {
-                ReportJS = ExtensionMethods.GetHTMLTemplate("circlechart.js", TemplatesFolder + "/assets/js/");
+                ReportJS = ExtensionMethods.GetHTMLTemplate("circlechart.js", Path.Combine(TemplatesFolder , "assets","js"));
             }
             if (currentTemplate.UseLocalStoredStyling)
             {
                 if (ReportsCSS == string.Empty || ReportsCSS == "")
                 {
-                    ReportsCSS = ExtensionMethods.GetHTMLTemplate("Styles.css", TemplatesFolder + "/assets/css/");
+                    ReportsCSS = ExtensionMethods.GetHTMLTemplate("Styles.css", Path.Combine(TemplatesFolder, "assets", "css"));
                 }
             }
             // running on all selected fields and getting this fields names AND values from the Report file (both into separate html-table string)
@@ -2073,8 +2073,10 @@ namespace Ginger.Reports.GingerExecutionReport
             fieldsValuesHTMLTableCells.Remove(0, fieldsValuesHTMLTableCells.Length);
             fieldPerecentHTMLTableCells.Remove(0, fieldPerecentHTMLTableCells.Length);
 
+            List<HTMLReportConfigFieldToSelect> selectedActivityFields = currentTemplate.ActivityFieldsToSelect.Where(x => x.FieldType == FieldsType.Section.ToString()).ToList();
+
             // adding Sections
-            foreach (HTMLReportConfigFieldToSelect selectedField in currentTemplate.ActivityFieldsToSelect.Where(x => (x.FieldType == Ginger.Reports.FieldsType.Section.ToString())))
+            foreach (HTMLReportConfigFieldToSelect selectedField in selectedActivityFields)
             {
                 if ((selectedField.FieldKey == ActivityReport.Fields.VariablesDetails) && (selectedField.IsSelected == true))
                 {
