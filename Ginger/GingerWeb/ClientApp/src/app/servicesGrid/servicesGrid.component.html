@@ -1,8 +1,11 @@
 <h1>Services Grid</h1>
 
-<p>List all Ginger services connected to Ginger sevrices grid</p>
+<div *ngIf="!services" style="width:600px;">
+  <img class="loader" src="spinner.gif" />
+</div>
 
-<p *ngIf="!services"><em>Loading...</em></p>
+
+<p>List all Ginger services connected to Ginger sevrices grid</p>
 
 <table class='table' *ngIf="services">
   <thead class="thead-light">

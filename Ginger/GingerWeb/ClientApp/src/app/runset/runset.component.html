@@ -2,7 +2,10 @@
 
 <p>List all Run Sets of the solution</p>
 
-<p *ngIf="!runsets"><em>Loading...</em></p>
+
+  <div *ngIf="!runsets" style="width:600px;">
+    <img class="loader" src="spinner.gif" />
+  </div>
 
 <table class='table' *ngIf="runsets">
   <thead class="thead-light">

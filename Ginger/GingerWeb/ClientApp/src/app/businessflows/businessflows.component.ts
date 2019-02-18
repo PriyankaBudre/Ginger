@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common'; 
 //import { NgbdSortableHeader, SortEvent } from './sortable.directive';
 
 @Component({
@@ -18,7 +19,7 @@ export class BusinessFlowsComponent
 
   //@ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string)
+  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, @Inject(DOCUMENT) document)
   {
     this.mHttp = http;
     this.mBaseUrl = baseUrl;
@@ -30,7 +31,11 @@ export class BusinessFlowsComponent
 
   }
 
-  public runFlow(BF: BusinessFlow) {
+  public runFlow(BF: BusinessFlow, index) {
+    var elem = document.getElementById(index);
+    elem.children.namedItem("Run").setAttribute("style", "display:none;");
+    elem.children.namedItem("img").removeAttribute("style");
+
     BF.status = "Running";
     BF.elapsed = -1;
     const req = this.mHttp.post<RunBusinessFlowResult>(this.mBaseUrl + 'api/BusinessFlow/RunBusinessFlow', {
@@ -42,10 +47,14 @@ export class BusinessFlowsComponent
         BF.status = res.status;
         BF.elapsed = res.elapsed;
         // this.report = res.report;
+        elem.children.namedItem("img").setAttribute("style", "display:none;");
+        elem.children.namedItem("Run").removeAttribute("style");
       },
         err => {
           console.log("Error occured");
           BF.status = "Exception while run flow";
+          elem.children.namedItem("img").setAttribute("style", "display:none;");
+          elem.children.namedItem("Run").removeAttribute("style");
         }
       );
 

@@ -9,7 +9,11 @@
     <a href="C:\Ginger\Report\BusinessFlowReport.html" target="_blank" class="btnSmall" style="min-width: 50%;float: right; line-height: 25px;">View Report</a>
   </div>
 </div>
-<p *ngIf="!businessflows"><em>Loading...</em></p>
+
+  <div *ngIf="!businessflows" style="width:600px;">
+    <img class="loader" src="spinner.gif" />
+  </div>
+
 
 <table class='table' *ngIf="businessflows">
   <thead class="thead-light">
@@ -19,7 +23,7 @@
       <th>Filename</th>
       <th>Status</th>
       <th>Elapsed</th>
-      <th>Run</th>      
+      <th>Run</th>
     </tr>
   </thead>
   <tbody>
@@ -29,14 +33,10 @@
       <td>{{ forecast.fileName }}</td>
       <td>{{ forecast.status }}</td>
       <td>{{ forecast.elapsed }}</td>
-      <td>
-        <!--<div ng-show="forecast.status != 'Running' ? true : false">-->
-          <button class="btnSmall" (click)="runFlow(forecast)">Run</button>
-          <!-- </div>
-  <div ng-show="forecast.status == 'Running' ? true : false">
-     <img src="spinner.gif" width="15%" />
-   </div>-->
-</td> 
+      <td id="{{forecast.name}}">
+        <button name="Run" class="btnSmall" (click)="runFlow(forecast, forecast.name)">Run</button>
+        <img name="img" src="spinner.gif" width="25%" style="display: none;"/>
+      </td>
     </tr>
   </tbody>
 </table>

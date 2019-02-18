@@ -37,3 +37,12 @@ a.navbar-brand[_ngcontent-c1] {
   .table td, .table th {
     text-align: center;
   }
+
+
+.loader {
+  left: calc(50% - 20px);
+  position: relative;
+  top: calc(50%);
+  width: 100px;
+}
+

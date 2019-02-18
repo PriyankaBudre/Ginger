@@ -1,7 +1,11 @@
 <h2>Solution</h2>
 
 <p>select a solution to open it</p>
-<p *ngIf="!solutions"><em>Loading...</em></p>
+
+  <div *ngIf="!solutions" style="width:600px;">
+    <img class="loader" src="spinner.gif" />
+  </div>
+
 
 <table class='table' *ngIf="solutions">
   <thead class="thead-light">
