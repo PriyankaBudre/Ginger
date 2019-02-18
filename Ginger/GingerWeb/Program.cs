@@ -17,8 +17,8 @@ namespace GingerWeb
         {
             General.init();
 
-            // CreateWebHostBuilder(args).Build().Run();
-            CreateWebHostBuilderAllIPs15000(args).Build().Run();
+            CreateWebHostBuilder(args).Build().Run();
+            //CreateWebHostBuilderAllIPs15000(args).Build().Run();
 
             
         }

@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'services-grid-data',
-  templateUrl: './servicesgrid.component.html'
+  templateUrl: './servicesGrid.component.html'
 })
 
 

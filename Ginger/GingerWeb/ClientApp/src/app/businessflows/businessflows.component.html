@@ -6,7 +6,7 @@
     </p>
   </div>
   <div class="col-md-3">
-    <a href="C:\Ginger\Report\BusinessFlowReport.html" target="_blank" class="btnSmall" style="min-width: 50%;float: right;">View Report</a>
+    <a href="C:\Ginger\Report\BusinessFlowReport.html" target="_blank" class="btnSmall" style="min-width: 50%;float: right; line-height: 25px;">View Report</a>
   </div>
 </div>
 <p *ngIf="!businessflows"><em>Loading...</em></p>
@@ -30,8 +30,13 @@
       <td>{{ forecast.status }}</td>
       <td>{{ forecast.elapsed }}</td>
       <td>
-        <button class="btnSmall" (click)="runFlow(forecast)">Run</button>
-      </td>
+        <!--<div ng-show="forecast.status != 'Running' ? true : false">-->
+          <button class="btnSmall" (click)="runFlow(forecast)">Run</button>
+          <!-- </div>
+  <div ng-show="forecast.status == 'Running' ? true : false">
+     <img src="spinner.gif" width="15%" />
+   </div>-->
+</td> 
     </tr>
   </tbody>
 </table>

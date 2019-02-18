@@ -10,7 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { SolutionComponent } from './solution/solution.component';
 import { BusinessFlowsComponent } from './businessflows/businessflows.component';
-import { ServicesGridComponent } from './servicesgrid/servicesgrid.component';
+import { ServicesGridComponent } from './servicesGrid/servicesGrid.component';
 import { RunSetComponent } from './runset/runset.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -35,7 +35,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
       { path: 'counter', component: CounterComponent },
       { path: 'solution', component: SolutionComponent },
       { path: 'businessflows', component: BusinessFlowsComponent },
-      { path: 'servicesgrid', component: ServicesGridComponent },
+      { path: 'servicesGrid', component: ServicesGridComponent },
       { path: 'runset', component: RunSetComponent },
     ])
   ],
