@@ -136,9 +136,9 @@ namespace Ginger
             AddEnvParams();
             AddGlobalParameters();
             AddRosylynFunctions();
-           //AddVBSFunctions();
-            //AddRegexFunctions();
-            //AddVBSIfFunctions();
+           AddVBSFunctions();
+            AddRegexFunctions();
+            AddVBSIfFunctions();
             AddDataSources();
             AddSecurityConfiguration();
 
@@ -222,14 +222,18 @@ namespace Ginger
             WorkSpace.VERefrences = VERefrenceList.LoadFromJson(Path.Combine(new string[] { Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "RosLynLib", "ValueExpressionRefrences.json" }));
 
 
-            foreach (ValueExpressionReference VER in WorkSpace.VERefrences.Refrences)
+            TreeViewItem tvCS = new TreeViewItem();
+            SetItemView(tvCS, "C# Functions","", "@Config3_16x16.png");
+            xObjectsTreeView.Items.Add(tvCS);
+
+            foreach (ValueExpressionReference VER in WorkSpace.VERefrences.Refrences.Where(x=>x.Expression.Contains("{CS")))
             {
                 TreeViewItem Parent;
                 if (!Categories.TryGetValue(VER.Category, out Parent))
                 {
                     Parent = new TreeViewItem();
                     SetItemView(Parent, VER.Category, "",VER.IconImageName==null? "@Config3_16x16.png":VER.IconImageName);
-                    xObjectsTreeView.Items.Add(Parent);
+                    tvCS.Items.Add(Parent);
                     Categories.Add(VER.Category, Parent);
                 }
 

@@ -59,20 +59,19 @@ namespace GingerCoreNET.RosLynLib
             SO.WithReferences(Assembly.GetAssembly(typeof(string)));
 
 
-            string pattern = "^[^{}]*" +
-                       "(" +
-                       "((?'Open'{)[^{}]*)+" +
-                       "((?'Close-Open'})[^{}]*)+" +
-                       ")*" +
-                       "(?(Open)(?!))";
-             pattern = "{CS({|}|.)*}";
 
 
-            Pattern =   new Regex(pattern);
             Regex Clean =new  Regex("{CS(\\s)*Exp(\\s)*=");
 
-            foreach (Match M in Pattern.Matches(Expression))
+            string pattern = @"{CS(\s)*Exp(\s)*=(\s)*(({([^{])*})*|[^{}]*)*}";
+            string input = @"{CS Exp = DateTime.Now}{CS Exp =  DateTime.Now}";
+            RegexOptions options = RegexOptions.Multiline;
+
+          
+        
+            foreach (Match M in Regex.Matches(Expression, pattern, options))
             {
+            
                 string match = M.Value;
                 string exp = match;
                 exp = exp.Replace(Clean.Match(exp).Value, "");

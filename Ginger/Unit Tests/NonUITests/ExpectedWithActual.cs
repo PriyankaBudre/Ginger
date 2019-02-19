@@ -207,5 +207,138 @@ namespace UnitTests.NonUITests
            Assert.AreEqual(ARC.Status, ActReturnValue.eStatus.Passed);
         }
 
+        [TestMethod]
+        [Timeout(60000)]
+        public void ExpectedActulGreaterThan()
+        {
+            //Arrange
+            ActReturnValue ARC = new ActReturnValue();
+            ARC.Actual = "25";
+            ARC.Expected = "5";
+            ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.GreaterThan;
+            //Act
+            CalculateARC(ARC);
+            //Assert
+            Assert.AreEqual(ARC.Status, ActReturnValue.eStatus.Passed);
+        }
+        [TestMethod]
+        [Timeout(60000)]
+        public void ExpectedActulGreaterThanEquals()
+        {
+            //Arrange
+            ActReturnValue ARC = new ActReturnValue();
+            ARC.Actual = "25";
+            ARC.Expected = "25";
+            ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.GreaterThanEquals;
+            //Act
+            CalculateARC(ARC);
+            //Assert
+            Assert.AreEqual(ARC.Status, ActReturnValue.eStatus.Passed);
+        }
+        [TestMethod]
+        [Timeout(60000)]
+        public void ExpectedActulLessThanEquals()
+        {
+            //Arrange
+            ActReturnValue ARC = new ActReturnValue();
+            ARC.Actual = "25";
+            ARC.Expected = "25";
+            ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.LessThanEquals;
+            //Act
+            CalculateARC(ARC);
+            //Assert
+            Assert.AreEqual(ARC.Status, ActReturnValue.eStatus.Passed);
+        }
+        [TestMethod]
+        [Timeout(60000)]
+        public void ExpectedActulLessThan()
+        {
+            //Arrange
+            ActReturnValue ARC = new ActReturnValue();
+            ARC.Actual = "5";
+            ARC.Expected = "25";
+            ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.LessThan;
+            //Act
+            CalculateARC(ARC);
+            //Assert
+            Assert.AreEqual(ARC.Status, ActReturnValue.eStatus.Passed);
+        }
+        [TestMethod]
+        [Timeout(60000)]
+        public void ExpectedActualEquals()
+        {
+            //Arrange
+            ActReturnValue ARC = new ActReturnValue();
+            ARC.Actual = "25";
+            ARC.Expected = "25";
+            ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.Equals;
+            //Act
+            CalculateARC(ARC);
+            //Assert
+            Assert.AreEqual(ARC.Status, ActReturnValue.eStatus.Passed);
+        }
+
+        [TestMethod]
+        [Timeout(60000)]
+        public void ExpectedActualContains()
+        {
+            //Arrange
+            ActReturnValue ARC = new ActReturnValue();
+            ARC.Actual = "25";
+            ARC.Expected = "5";
+            ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.Contains;
+            //Act
+            CalculateARC(ARC);
+            //Assert
+            Assert.AreEqual(ARC.Status, ActReturnValue.eStatus.Passed);
+        }
+
+
+        [TestMethod]
+        [Timeout(60000)]
+        public void ExpectedActualDoesNotContains()
+        {
+            //Arrange
+            ActReturnValue ARC = new ActReturnValue();
+            ARC.Actual = "25";
+            ARC.Expected = "55";
+            ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.DoesNotContains;
+            //Act
+            CalculateARC(ARC);
+            //Assert
+            Assert.AreEqual(ARC.Status, ActReturnValue.eStatus.Passed);
+        }
+
+
+        [TestMethod]
+        [Timeout(60000)]
+        public void ExpectedActualDoesNotEquals()
+        {
+            //Arrange
+            ActReturnValue ARC = new ActReturnValue();
+            ARC.Actual = "25";
+            ARC.Expected = "55";
+            ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.NotEquals;
+            //Act
+            CalculateARC(ARC);
+            //Assert
+            Assert.AreEqual(ARC.Status, ActReturnValue.eStatus.Passed);
+        }
+        [TestMethod]
+        [Timeout(60000)]
+        public void ExpectedActualEvaluate()
+        {
+            //Arrange
+            ActReturnValue ARC = new ActReturnValue();
+            ARC.Actual = "25";
+            ARC.Expected = "55>25";
+            ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.Evaluate;
+            //Act
+            CalculateARC(ARC);
+            //Assert
+            Assert.AreEqual(ARC.Status, ActReturnValue.eStatus.Passed);
+        }
+
+
     }
 }

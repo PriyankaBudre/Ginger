@@ -1,11 +1,14 @@
 <h1>Services Grid</h1>
 
+<div *ngIf="!services" style="width:600px;">
+  <img class="loader" src="spinner.gif" />
+</div>
+
+
 <p>List all Ginger services connected to Ginger sevrices grid</p>
 
-<p *ngIf="!services"><em>Loading...</em></p>
-
 <table class='table' *ngIf="services">
-  <thead>
+  <thead class="thead-light">
     <tr>
       <th>Name</th>
       <th>Service ID</th>

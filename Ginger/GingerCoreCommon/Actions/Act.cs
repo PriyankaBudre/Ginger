@@ -1007,6 +1007,7 @@ namespace GingerCore.Actions
             if (ARC == null && (AddNewReturnParams == true || ConfigOutputDS == true))
             {
                 ARC = new ActReturnValue();
+                ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.Equals;
                 ARC.Active = true;
                 ReturnValues.Add(ARC);
                 ARC.Param = ParamName;
@@ -1031,6 +1032,7 @@ namespace GingerCore.Actions
             {
                 ARC = new ActReturnValue();
                 ARC.Active = true;
+                ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.Equals;
                 ReturnValues.Add(ARC);
                 ARC.Param = ParamName;
             }
@@ -1052,6 +1054,7 @@ namespace GingerCore.Actions
             {
                 ARC = new ActReturnValue();
                 ARC.Active = true;
+                ARC.Operator = Amdocs.Ginger.Common.Expressions.eOperator.Equals;
                 ReturnValues.Add(ARC);
                 ARC.Param = ParamName;
                 ARC.Path = sPath;

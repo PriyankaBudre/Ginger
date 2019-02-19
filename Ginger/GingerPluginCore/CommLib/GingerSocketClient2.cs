@@ -66,7 +66,7 @@ namespace Amdocs.Ginger.CoreNET.Drivers.CommunicationProtocol
                 IPEndPoint remoteIP = new IPEndPoint(ipAddress, port);                
                 Socket socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-                Console.WriteLine("Connecting to: " + remoteIP + ":" + port);
+                Console.WriteLine("Connecting to: " + remoteIP);  
                 // Connect to Ginger Server async, retry max 30 seconds                
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 int retrycount = 0;

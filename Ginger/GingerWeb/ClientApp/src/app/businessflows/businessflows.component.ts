@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { DOCUMENT } from '@angular/common'; 
+//import { NgbdSortableHeader, SortEvent } from './sortable.directive';
 
 @Component({
   selector: 'business-flows-data',
@@ -14,20 +15,26 @@ export class BusinessFlowsComponent
   public report: string;
   mHttp: HttpClient;
   mBaseUrl: string;
+  total$: number;
 
-  
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string)
+  //@ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
+
+  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, @Inject(DOCUMENT) document)
   {
     this.mHttp = http;
     this.mBaseUrl = baseUrl;
 
     http.get<BusinessFlow[]>(baseUrl + 'api/BusinessFlow/BusinessFlows').subscribe(result => {
       this.businessflows = result;
+      //this.total$: result.length;
     }, error => console.error(error));
 
   }
 
-  public runFlow(BF:BusinessFlow) {
+  public runFlow(BF: BusinessFlow, index) {
+    var elem = document.getElementById(index);
+    elem.children.namedItem("Run").setAttribute("style", "display:none;");
+    elem.children.namedItem("img").removeAttribute("style");
 
     BF.status = "Running";
     BF.elapsed = -1;
@@ -40,18 +47,35 @@ export class BusinessFlowsComponent
         BF.status = res.status;
         BF.elapsed = res.elapsed;
         // this.report = res.report;
+        elem.children.namedItem("img").setAttribute("style", "display:none;");
+        elem.children.namedItem("Run").removeAttribute("style");
       },
         err => {
           console.log("Error occured");
-          BF.status = "Error 123";
+          BF.status = "Exception while run flow";
+          elem.children.namedItem("img").setAttribute("style", "display:none;");
+          elem.children.namedItem("Run").removeAttribute("style");
         }
       );
+
   }
 
   public flowReport(BF: BusinessFlow) {
     
   }
 
+  //onSort({ column, direction }: SortEvent) {
+
+  //  // resetting other headers
+  //  this.headers.forEach(header => {
+  //    if (header.sortable !== column) {
+  //      header.direction = '';
+  //    }
+  //  });
+
+  //  this.service.sortColumn = column;
+  //  this.service.sortDirection = direction;
+  //}
 
 
 }
@@ -69,5 +93,5 @@ interface BusinessFlow {
   description: string;
   fileName: string;
   status: string;
-  elapsed: number;  
+  elapsed: number;
 }

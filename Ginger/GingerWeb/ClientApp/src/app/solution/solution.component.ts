@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-
 @Component({
   selector: 'app-solution',
   templateUrl: './solution.component.html'
@@ -24,13 +23,13 @@ export class SolutionComponent
     http.get<Solution[]>(baseUrl + 'api/Solution/Solutions').subscribe(result => {
       this.solutions = result;
     }, error => console.error(error));
-
+    
   }
 
-  public openSolutionFlow(BF:Solution) {
+  public openSolution(solution:Solution) {
     
-    const req = this.mHttp.post<RunBusinessFlowResult>(this.mBaseUrl + 'api/BusinessFlow/RunBusinessFlow', {
-      name: BF.name  //TODO: We send the BF name replace with BF.Guid
+    const req = this.mHttp.post<RunBusinessFlowResult>(this.mBaseUrl + 'api/Solution/OpenSolution', {
+      name: solution.path 
     })
       .subscribe(
       res => {
@@ -46,6 +45,19 @@ export class SolutionComponent
       );
   }
 
+  //onSort({ column, direction }: SortEvent) {
+
+  //  // resetting other headers
+  //  this.headers.forEach(header => {
+  //    if (header.sortable !== column) {
+  //      header.direction = '';
+  //    }
+  //  });
+
+  //  this.service.sortColumn = column;
+  //  this.service.sortDirection = direction;
+  //}
+
   
 
 }
@@ -60,5 +72,5 @@ interface RunBusinessFlowResult {
 
 interface Solution {
   name: string;
-  folder: string;  
+  path: string;  
 }

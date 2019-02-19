@@ -1,11 +1,8 @@
-﻿using System;
+﻿using amdocs.ginger.GingerCoreNET;
+using Ginger.Run;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using amdocs.ginger.GingerCoreNET;
-using Ginger.Run;
-using GingerWeb.UsersLib;
-using Microsoft.AspNetCore.Mvc;
 
 namespace GingerWeb.Controllers
 {
@@ -17,7 +14,7 @@ namespace GingerWeb.Controllers
         [HttpGet("[action]")]
         public IEnumerable<object> RunSets()
         {        
-            IEnumerable<RunSetConfig> runSets = General.SR.GetAllRepositoryItems<RunSetConfig>().OrderBy(x => x.Name);
+            IEnumerable<RunSetConfig> runSets = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<RunSetConfig>().OrderBy(x => x.Name);
             var data = runSets.Select(x =>
                                     new
                                     {
@@ -52,7 +49,7 @@ namespace GingerWeb.Controllers
                 return runBusinessFlowResult;
             }
 
-            RunSetConfig runSet = (from x in General.SR.GetAllRepositoryItems<RunSetConfig>() where x.Name == runRunSetRequest.name select x).SingleOrDefault();
+            RunSetConfig runSet = (from x in WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<RunSetConfig>() where x.Name == runRunSetRequest.name select x).SingleOrDefault();
             if (runSet == null)
             {
                 runBusinessFlowResult.Status = "Name cannot be null";

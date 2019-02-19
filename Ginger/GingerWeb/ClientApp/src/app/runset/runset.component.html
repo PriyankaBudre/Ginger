@@ -1,11 +1,14 @@
-<h1>Run Sets</h1>
+<h2>Run Sets</h2>
 
 <p>List all Run Sets of the solution</p>
 
-<p *ngIf="!runsets"><em>Loading...</em></p>
+
+  <div *ngIf="!runsets" style="width:600px;">
+    <img class="loader" src="spinner.gif" />
+  </div>
 
 <table class='table' *ngIf="runsets">
-  <thead>
+  <thead class="thead-light">
     <tr>
       <th>Name</th>
       <th>Description</th>
@@ -20,8 +23,7 @@
       <td>{{ runset.description }}</td>      
       <td>{{ runset.status }}</td>
       <td>{{ runset.elapsed }}</td>
-      <td><button (click)="run(runset)">Run</button></td>      
-      <td></td>
+      <td><button class="btnSmall" (click)="run(runset)">Run</button></td>            
     </tr>
   </tbody>
 </table>

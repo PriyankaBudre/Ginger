@@ -39,7 +39,7 @@ namespace GingerCoreNET.RunLib
         }
 
         /// <summary>
-        /// Create nwe GingerGrid and auto select free port
+        /// Create new GingerGrid and auto select free port
         /// </summary>
         public GingerGrid()
         {           

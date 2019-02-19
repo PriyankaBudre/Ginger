@@ -1,18 +1,29 @@
-<h1>Business Flows</h1>
+<h2>Business Flows</h2>
+<div class="row">
+  <div class="col-md-9">
+    <p>
+      List all business flows of the solution
+    </p>
+  </div>
+  <div class="col-md-3">
+    <a href="C:\Ginger\Report\BusinessFlowReport.html" target="_blank" class="btnSmall" style="min-width: 50%;float: right; line-height: 25px;">View Report</a>
+  </div>
+</div>
 
-<p>List all business flows of the solution</p>
+  <div *ngIf="!businessflows" style="width:600px;">
+    <img class="loader" src="spinner.gif" />
+  </div>
 
-<p *ngIf="!businessflows"><em>Loading...</em></p>
 
 <table class='table' *ngIf="businessflows">
-  <thead>
+  <thead class="thead-light">
     <tr>
       <th>Name</th>
       <th>Description</th>
       <th>Filename</th>
       <th>Status</th>
       <th>Elapsed</th>
-      <th>Run</th>      
+      <th>Run</th>
     </tr>
   </thead>
   <tbody>
@@ -22,8 +33,10 @@
       <td>{{ forecast.fileName }}</td>
       <td>{{ forecast.status }}</td>
       <td>{{ forecast.elapsed }}</td>
-      <td><button (click)="runFlow(forecast)">Run</button></td>      
-      <td></td>
+      <td id="{{forecast.name}}">
+        <button name="Run" class="btnSmall" (click)="runFlow(forecast, forecast.name)">Run</button>
+        <img name="img" src="spinner.gif" width="25%" style="display: none;"/>
+      </td>
     </tr>
   </tbody>
 </table>

@@ -1,3 +1,4 @@
+using amdocs.ginger.GingerCoreNET;
 using Ginger.Reports;
 using Ginger.Run;
 using GingerCore;
@@ -14,9 +15,8 @@ namespace GingerWeb.Controllers
 {
     [Route("api/[controller]")]
     public class BusinessFlowController : Controller
-    {
-        // temp remove from here !!!!!!!!!!!
-        static bool bDone;
+    {        
+        
 
         public class RunBusinessFlowRequest
         {
@@ -35,13 +35,8 @@ namespace GingerWeb.Controllers
         [HttpGet("[action]")]
         public IEnumerable<object> BusinessFlows()
         {
-            if (!bDone)
-            {
-                General.init();
-                bDone = true;
-            }
-
-            IEnumerable<BusinessFlow> BusinessFlows = General.SR.GetAllRepositoryItems<BusinessFlow>().OrderBy(x => x.Name);
+            
+            IEnumerable<BusinessFlow> BusinessFlows = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<BusinessFlow>().OrderBy(x => x.Name);
             var data = BusinessFlows.Select(x =>
                                     new
                                     {
@@ -58,7 +53,10 @@ namespace GingerWeb.Controllers
         [HttpPost("[action]")]
         public RunBusinessFlowResult RunBusinessFlow([FromBody] RunBusinessFlowRequest runBusinessFlowRequest)
         {
-            Directory.Delete(jsonDumpFolder, true);
+            if (Directory.Exists(jsonDumpFolder))
+            {
+                Directory.Delete(jsonDumpFolder, true);
+            }
             Directory.CreateDirectory(jsonDumpFolder);
             RunBusinessFlowResult runBusinessFlowResult = new RunBusinessFlowResult();
 
@@ -68,7 +66,7 @@ namespace GingerWeb.Controllers
                 return runBusinessFlowResult;
             }
 
-            BusinessFlow BF = (from x in General.SR.GetAllRepositoryItems<BusinessFlow>() where x.Name == runBusinessFlowRequest.name select x).SingleOrDefault();
+            BusinessFlow BF = (from x in WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<BusinessFlow>() where x.Name == runBusinessFlowRequest.name select x).SingleOrDefault();
             if (BF == null)
             {
                 runBusinessFlowResult.Status = "Name cannot be null";
@@ -87,25 +85,26 @@ namespace GingerWeb.Controllers
         }
 
 
-        string jsonDumpFolder = @"c:\temp\Ginger\Dump\";  // !!!!!!!!!!!!!!!!!!!temp FIXME
+        string jsonDumpFolder = General.GetLocalGingerDirectory("Dump") + Path.DirectorySeparatorChar;
         
 
         void GenerateReport(BusinessFlow businessFlow)    // temp remove BF from param
         {
 
             string BusinessFlowReportFolder = jsonDumpFolder + "1 " + businessFlow.GetNameForFileName();   // !!!!!!!!!!!!!!!! temp remove
-            ReportInfo RI = new ReportInfo(BusinessFlowReportFolder);
-            //Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(RI);
+            ReportInfo RI = new ReportInfo(BusinessFlowReportFolder);            
 
-            string templatesFolder = @"C:\Users\yaronwe\source\repos\Ginger\Ginger\Ginger\Reports\GingerExecutionReport\"; // !!!!!!!!!!!!!!!!!!!!!!! temp fix me
-            
+            string templatesFolder = General.GetLocalGingerDirectory("HTMLReportTemplate");
 
-            string hTMLOutputFolder = @"C:\Temp\Ginger\Report"; // !!!!!!!!!!!!!!!!!!!!!!! temp fix me
-            Directory.Delete(hTMLOutputFolder,true);
-            Directory.CreateDirectory(hTMLOutputFolder);
-            
+            string hTMLOutputFolder = General.GetLocalGingerDirectory("Report"); 
 
-            //HTMLReportConfiguration config = new HTMLReportConfiguration();
+
+            if (Directory.Exists(hTMLOutputFolder))
+            {
+                Directory.Delete(hTMLOutputFolder, true);
+            }
+            Directory.CreateDirectory(hTMLOutputFolder);                        
+
             HTMLReportConfiguration config = HTMLReportConfiguration.SetHTMLReportConfigurationWithDefaultValues("DefaultTemplate", true);
             string report = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(RI, config, templatesFolder, hTMLOutputFolder);
 

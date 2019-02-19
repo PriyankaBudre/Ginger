@@ -43,7 +43,10 @@ namespace GingerWeb
                 app.UseHsts();
             }
 
+
+            // Auto redirect to HTTPS comment to stay on HTTP 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
