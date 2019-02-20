@@ -325,14 +325,16 @@ namespace Ginger.Reports
                 actionReports = new List<ActionReport>();
                 if (LogFolder != null)
                 {
-                    foreach (string folder in System.IO.Directory.GetDirectories(LogFolder))
+
+                    string[] directories = Directory.GetDirectories(LogFolder);
+                    foreach (string folder in directories)
                     {
                         FileAttributes attr = File.GetAttributes(folder);
                         if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                         {
                             try
                             {
-                                ActionReport actrR = (ActionReport)JsonLib.LoadObjFromJSonFile(folder + @"\Action.txt", typeof(ActionReport));
+                                ActionReport actrR = (ActionReport)JsonLib.LoadObjFromJSonFile(Path.Combine(folder ,"Action.txt"), typeof(ActionReport));
                                 actrR.LogFolder = folder;
                                 actionReports.Add(actrR);
                             }

@@ -223,12 +223,12 @@ namespace Ginger.Reports
             newHTMLReportConfiguration.ActivityFieldsToSelect = GetReportLevelMembers(typeof(ActivityReport));
             newHTMLReportConfiguration.ActionFieldsToSelect = GetReportLevelMembers(typeof(ActionReport));
             newHTMLReportConfiguration.Description = string.Empty;
-            using (var ms = new MemoryStream())
-            {
-                string file = Ginger.Reports.GingerExecutionReport.ExtensionMethods.getGingerEXEFileName().Replace("Ginger.exe", @"Images\@amdocs_logo.jpg");
-                Bitmap bitmap = new Bitmap(file);
-                newHTMLReportConfiguration.LogoBase64Image = BitmapToBase64(bitmap);
-            }
+            //using (var ms = new MemoryStream())
+            //{
+            //    //string file = Ginger.Reports.GingerExecutionReport.ExtensionMethods.getGingerEXEFileName().Replace("Ginger.exe", @"Images\@amdocs_logo.jpg");
+            //    //Bitmap bitmap = new Bitmap(file);
+            //    //newHTMLReportConfiguration.LogoBase64Image = BitmapToBase64(bitmap);
+            //}
             return newHTMLReportConfiguration;
         }
 
