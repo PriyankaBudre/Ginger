@@ -1,3 +1,6 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+
 /* You can add global styles to this file, and also import other style files */
 .navbar {
   background: linear-gradient(to left, #ef3082, #fa993d)
@@ -35,5 +38,56 @@ a.navbar-brand[_ngcontent-c1] {
   }
 
   .table td, .table th {
-    text-align: center;
+    text-align: center !important;
   }
+
+
+.loader {
+  left: calc(50% - 10px);
+  position: relative;
+  top: calc(50%);
+  width: 100px;
+}
+
+table {
+  width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  min-width: 500px !important;
+}
+
+th.mat-header-cell {
+  text-align: center !important;
+  max-width: 300px;
+}
+
+.table thead th {
+  vertical-align: middle !important;
+  border-bottom: 2px solid #dee2e6 !important;
+}
+
+.mat-sort-header-container {
+  justify-content: center !important;
+}
+
+td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type, th.mat-header-cell:last-of-type {
+  padding: .75rem !important;
+}
+
+tr.mat-header-row {
+  height: auto !important;
+  color: #495057 !important;
+  background-color: #e9ecef !important;
+  border-color: #dee2e6 !important;
+}
+
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+  padding: .75rem !important;
+  border-bottom-width: 1px !important;
+  border-bottom-style: inherit !important;
+}
+
+.mat-header-cell {
+  font-size: 13px !important;
+  font-weight: bold !important;
+}

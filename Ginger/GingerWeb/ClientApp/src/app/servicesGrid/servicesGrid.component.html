@@ -1,10 +1,68 @@
 <h1>Services Grid</h1>
 
 <p>List all Ginger services connected to Ginger sevrices grid</p>
+<div *ngIf="!services" style="width:600px;">
+  <img class="loader" src="spinner.gif" />
+</div>
 
-<p *ngIf="!services"><em>Loading...</em></p>
 
-<table class='table' *ngIf="services">
+<div *ngIf="services">
+  <div fxLayout fxLayoutAlign="center center">
+    <mat-form-field fxFlex="40%">
+      <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+  </div>
+
+  <table mat-table class='table' [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="serviceId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Service Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.serviceId}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sessionId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Session Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.sessionId}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="host">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Host </th>
+      <td mat-cell *matCellDef="let element"> {{element.host}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ip">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> IP </th>
+      <td mat-cell *matCellDef="let element"> {{element.ip}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="os">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> OS </th>
+      <td mat-cell *matCellDef="let element"> {{element.os}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actionCount">
+      <th mat-header-cell *matHeaderCellDef> Action Count </th>
+      <td mat-cell *matCellDef="let element"> {{element.actionCount}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSize]="2" [pageSizeOptions]="[2, 4, 6, 10, 20]">
+  </mat-paginator>
+</div>
+<!--<table class='table' *ngIf="services">
   <thead class="thead-light">
     <tr>
       <th>Name</th>
@@ -29,5 +87,5 @@
       <td>{{ service.actionCount }}</td>
     </tr>
   </tbody>
-</table>
+</table>-->
 
