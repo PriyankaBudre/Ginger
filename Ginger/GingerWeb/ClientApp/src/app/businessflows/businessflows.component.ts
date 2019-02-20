@@ -1,7 +1,8 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DOCUMENT } from '@angular/common'; 
-//import { NgbdSortableHeader, SortEvent } from './sortable.directive';
+import { DOCUMENT } from '@angular/common';
+import { MatPaginator, MatSort, MatSortModule, MatTableDataSource } from '@angular/material';
+
 
 @Component({
   selector: 'business-flows-data',
@@ -9,26 +10,41 @@ import { DOCUMENT } from '@angular/common';
 })
 
 
-export class BusinessFlowsComponent
-{
+export class BusinessFlowsComponent implements OnInit, AfterViewInit {
   public businessflows: BusinessFlow[];
   public report: string;
   mHttp: HttpClient;
   mBaseUrl: string;
-  total$: number;
+  displayedColumns = ['name', 'description', 'fileName', 'status', 'elapsed','run'];
+  public dataSource = new MatTableDataSource<BusinessFlow>();
 
-  //@ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, @Inject(DOCUMENT) document)
-  {
+  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, @Inject(DOCUMENT) document) {
     this.mHttp = http;
     this.mBaseUrl = baseUrl;
+  }
 
-    http.get<BusinessFlow[]>(baseUrl + 'api/BusinessFlow/BusinessFlows').subscribe(result => {
+  ngOnInit() {
+    this.getAllBF();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+  public getAllBF = () => {
+    this.mHttp.get<BusinessFlow[]>(this.mBaseUrl + 'api/BusinessFlow/BusinessFlows').subscribe(result => {
       this.businessflows = result;
-      //this.total$: result.length;
+      this.dataSource = new MatTableDataSource(result);      
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
     }, error => console.error(error));
+  }
 
+  public doFilter = (value: string) => {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
   public runFlow(BF: BusinessFlow, index) {
@@ -42,18 +58,18 @@ export class BusinessFlowsComponent
       name: BF.name  //TODO: We send the BF name replace with BF.Guid
     })
       .subscribe(
-      res => {
-        // Once we get the response        
-        BF.status = res.status;
-        BF.elapsed = res.elapsed;
-        // this.report = res.report;
-        elem.children.namedItem("img").setAttribute("style", "display:none;");
-        elem.children.namedItem("Run").removeAttribute("style");
-      },
+        res => {
+          // Once we get the response        
+          BF.status = res.status;
+          BF.elapsed = res.elapsed;
+          // this.report = res.report;
+          elem.children.namedItem("img").setAttribute("style", "display:none;");
+          elem.children.namedItem("Run").removeAttribute("style");
+        },
         err => {
           console.log("Error occured");
           BF.status = "Exception while run flow";
-          elem.children.namedItem("img").setAttribute("style", "display:none;");
+          elem.children.namedItem("img").setAttribute("style", "display:none;"); 
           elem.children.namedItem("Run").removeAttribute("style");
         }
       );
@@ -61,22 +77,8 @@ export class BusinessFlowsComponent
   }
 
   public flowReport(BF: BusinessFlow) {
-    
+
   }
-
-  //onSort({ column, direction }: SortEvent) {
-
-  //  // resetting other headers
-  //  this.headers.forEach(header => {
-  //    if (header.sortable !== column) {
-  //      header.direction = '';
-  //    }
-  //  });
-
-  //  this.service.sortColumn = column;
-  //  this.service.sortDirection = direction;
-  //}
-
 
 }
 
@@ -94,4 +96,5 @@ interface BusinessFlow {
   fileName: string;
   status: string;
   elapsed: number;
+  run: string;
 }
