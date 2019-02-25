@@ -2869,6 +2869,7 @@ namespace Ginger.Reports.GingerExecutionReport
                 folderName = folderName.Replace(invalidChar.ToString(), "");
             }
             folderName = folderName.Replace(@".", "");
+            folderName = folderName.Replace(@":", "");
             folderName = folderName.Replace(@"'", "");
             folderName = folderName.Replace("\"", "");
             folderName = folderName.TrimEnd().TrimEnd('-').TrimEnd();
