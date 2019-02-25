@@ -2451,6 +2451,8 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             // Save the HTML            
             string FileName =Path.Combine( currentHTMLReportsFolder , "ActionReport.html");
+
+
             File.WriteAllText(FileName, ReportHTML);
 
             ActionReport = null;
@@ -2828,7 +2830,7 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             catch (Exception ex)
             {
-
+                
                 Reporter.ToLog(eLogLevel.ERROR, $"Method - {MethodBase.GetCurrentMethod().Name}, Error - {ex.Message}", ex);
             }
         }
@@ -2837,6 +2839,8 @@ namespace Ginger.Reports.GingerExecutionReport
         {
             try
             {
+                if (WorkSpace.Instance == null)
+                    return logsFolder;
                 logsFolder = logsFolder.Replace(@"~", WorkSpace.Instance.Solution.Folder);
                 if (Directory.Exists(logsFolder))
                 {
