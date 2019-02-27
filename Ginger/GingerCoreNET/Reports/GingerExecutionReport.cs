@@ -2669,8 +2669,6 @@ namespace Ginger.Reports.GingerExecutionReport
 
     public static class ExtensionMethods
     {
-        public static string defaultAutomationTabReportName = "{name_to_replace}_{date_to_replace}_AutomationTab_{objectType_to_replace}";
-
         public static string CreateGingerExecutionReport(ReportInfo RI)
         {
             var HTMLReportConfigurations = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<HTMLReportConfiguration>();
@@ -2697,16 +2695,18 @@ namespace Ginger.Reports.GingerExecutionReport
 
         public static string CreateGingerExecutionReportByReportInfoLevel(ReportInfo RI,  HTMLReportConfiguration HTMLReportConfiguration, string templatesFolder, string hTMLOutputFolder)
         {
+            
             GingerExecutionReport gingerExecutionReport = new GingerExecutionReport();
             gingerExecutionReport.TemplatesFolder = templatesFolder;
             gingerExecutionReport.currentTemplate = HTMLReportConfiguration;
             gingerExecutionReport.HTMLReportMainFolder = hTMLOutputFolder;
-           
+
 
             if (Directory.Exists(gingerExecutionReport.HTMLReportMainFolder))
             {
                 CleanDirectory(gingerExecutionReport.HTMLReportMainFolder);
             }
+            
 
             switch (RI.reportInfoLevel)
             {

@@ -1348,7 +1348,20 @@ namespace Ginger
             //get logger files
             string exec_folder = Ginger.Run.ExecutionLogger.GetLoggerDirectory(_selectedExecutionLoggerConfiguration.ExecutionLoggerConfigurationExecResultsFolder + "\\" + Ginger.Run.ExecutionLogger.defaultAutomationTabLogName);
             //create the report
-            string reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(new ReportInfo(exec_folder));
+            // string reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(new ReportInfo(exec_folder));
+
+            var HTMLReportConfigurations = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<HTMLReportConfiguration>();
+            HTMLReportConfiguration hTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsSelected == true)).FirstOrDefault();
+
+            if (hTMLReportConfiguration == null)
+            {
+                hTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsDefault == true)).FirstOrDefault();
+            }
+
+            string defaultAutomationTabReportName = "{name_to_replace}_{date_to_replace}_AutomationTab_{objectType_to_replace}";
+
+            string outPutFolder = Path.Combine(currentConf.HTMLReportsFolder, defaultAutomationTabReportName);
+            string reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(new ReportInfo(exec_folder), hTMLReportConfiguration, exec_folder, outPutFolder);
 
             if (reportsResultFolder == string.Empty)
             {
