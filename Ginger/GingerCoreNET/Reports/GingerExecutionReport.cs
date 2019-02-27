@@ -1107,7 +1107,14 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             if (CompanyLogo == string.Empty || CompanyLogo == "")
             {
-                //CompanyLogo = CreateCompanyLogo();
+                try
+                {
+                    CompanyLogo = CreateCompanyLogo();
+                }
+                catch (Exception ex)
+                {
+                    Reporter.ToLog(eLogLevel.ERROR, ex.Message);
+                }
             }
             if (GingerLogo == string.Empty || GingerLogo == "")
             {
@@ -2557,9 +2564,9 @@ namespace Ginger.Reports.GingerExecutionReport
                 Image CustomerLogo = General.Base64StringToImage(currentTemplate.LogoBase64Image.ToString());
 
                 Tuple<int, int> sizes = General.RecalculatingSizeWithKeptRatio(CustomerLogo, logoWidth, logoHight);
-                if (Directory.Exists(HTMLReportMainFolder + "/assets/img"))
+                if (Directory.Exists(Path.Combine(HTMLReportMainFolder , "assets", "img")))
                 {
-                    CustomerLogo.Save(HTMLReportMainFolder + "/assets/img/CustomerLogo.png");
+                    CustomerLogo.Save(Path.Combine(HTMLReportMainFolder , "assets" ,"img", "CustomerLogo.png"));
                 }
                 customerLogo = "<img alt='Embedded Image' width='" + sizes.Item1.ToString() + "' height='" + sizes.Item2.ToString() + "' src='{ReportLevel}assets/img/CustomerLogo.png' />";
             }
@@ -2830,7 +2837,6 @@ namespace Ginger.Reports.GingerExecutionReport
             }
             catch (Exception ex)
             {
-                
                 Reporter.ToLog(eLogLevel.ERROR, $"Method - {MethodBase.GetCurrentMethod().Name}, Error - {ex.Message}", ex);
             }
         }

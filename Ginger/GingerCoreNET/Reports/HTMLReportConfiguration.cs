@@ -26,6 +26,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using SkiaSharp;
 
 namespace Ginger.Reports
 {
@@ -223,12 +224,20 @@ namespace Ginger.Reports
             newHTMLReportConfiguration.ActivityFieldsToSelect = GetReportLevelMembers(typeof(ActivityReport));
             newHTMLReportConfiguration.ActionFieldsToSelect = GetReportLevelMembers(typeof(ActionReport));
             newHTMLReportConfiguration.Description = string.Empty;
-            //using (var ms = new MemoryStream())
-            //{
-            //    //string file = Ginger.Reports.GingerExecutionReport.ExtensionMethods.getGingerEXEFileName().Replace("Ginger.exe", @"Images\@amdocs_logo.jpg");
-            //    //Bitmap bitmap = new Bitmap(file);
-            //    //newHTMLReportConfiguration.LogoBase64Image = BitmapToBase64(bitmap);
-            //}
+            using (var ms = new MemoryStream())
+            {
+                try
+                {
+                    string file = Path.Combine(Amdocs.Ginger.Common.GeneralLib.General.GetExecutingDirectory(), "Images", "@amdocs_logo.jpg");
+                    byte[] b = File.ReadAllBytes(file);
+                    newHTMLReportConfiguration.LogoBase64Image = Convert.ToBase64String(b);
+                }
+                catch (Exception ex)
+                {
+                    Reporter.ToLog(eLogLevel.ERROR, ex.Message);
+                }
+            }
+
             return newHTMLReportConfiguration;
         }
 

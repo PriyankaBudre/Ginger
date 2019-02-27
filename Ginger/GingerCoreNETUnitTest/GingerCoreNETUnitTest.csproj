@@ -203,10 +203,10 @@
     <None Update="TestResources\PluginPackages\GingerOfficePlugin\System.IO.Packaging.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestResources\Reports\AutomationTab_LastExecution\1 Goto SCM URL\1 Goto App URL - httpcmitechint1\Action.txt">
+    <None Update="TestResources\Reports\AutomationTab_LastExecution\1 Goto SCM URL\1 Goto App URL - httpcmitechint\Action.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestResources\Reports\AutomationTab_LastExecution\1 Goto SCM URL\1 Goto App URL - httpcmitechint1\ScreenShot_1_1.png">
+    <None Update="TestResources\Reports\AutomationTab_LastExecution\1 Goto SCM URL\1 Goto App URL - httpcmitechint\ScreenShot_1_1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestResources\Reports\AutomationTab_LastExecution\1 Goto SCM URL\Activity.txt">
