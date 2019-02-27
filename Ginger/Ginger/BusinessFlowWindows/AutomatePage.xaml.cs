@@ -1336,21 +1336,13 @@ namespace Ginger
             GenerateLastExecutedItemReport();
         }
 
-        private void GenerateLastExecutedItemReport()
-        {
-            ExecutionLoggerConfiguration _selectedExecutionLoggerConfiguration =  WorkSpace.UserProfile.Solution.ExecutionLoggerConfigurationSetList.Where(x => (x.IsSelected == true)).FirstOrDefault();
-            if (!_selectedExecutionLoggerConfiguration.ExecutionLoggerConfigurationIsEnabled)
-            {
-                Reporter.ToUser(eUserMsgKey.ExecutionsResultsProdIsNotOn);
-                return;
-            }
-            
-            //get logger files
-            string exec_folder = Ginger.Run.ExecutionLogger.GetLoggerDirectory(_selectedExecutionLoggerConfiguration.ExecutionLoggerConfigurationExecResultsFolder + "\\" + Ginger.Run.ExecutionLogger.defaultAutomationTabLogName);
-            //create the report
-            // string reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(new ReportInfo(exec_folder));
 
-            var HTMLReportConfigurations = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<HTMLReportConfiguration>();
+        string defaultAutomationTabReportName = "{name_to_replace}_{date_to_replace}_AutomationTab_{objectType_to_replace}";
+
+
+        private string RunReportWithAutomateValues(ReportInfo RI)
+        {
+            ObservableList<HTMLReportConfiguration> HTMLReportConfigurations = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<HTMLReportConfiguration>();
             HTMLReportConfiguration hTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsSelected == true)).FirstOrDefault();
             if (hTMLReportConfiguration == null)
             {
@@ -1359,10 +1351,26 @@ namespace Ginger
 
             string templatesFolder = Path.Combine(Amdocs.Ginger.Common.GeneralLib.General.GetExecutingDirectory(), "Reports", "GingerExecutionReport");
 
-            string defaultAutomationTabReportName = "{name_to_replace}_{date_to_replace}_AutomationTab_{objectType_to_replace}";
             HTMLReportsConfiguration currentConf = WorkSpace.UserProfile.Solution.HTMLReportsConfigurationSetList.Where(x => (x.IsSelected == true)).FirstOrDefault();
-            string outPutFolder = Path.Combine(currentConf.HTMLReportsFolder, defaultAutomationTabReportName);
-            string reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(new ReportInfo(exec_folder), hTMLReportConfiguration, templatesFolder, outPutFolder);
+            string outputFolder = Path.Combine(currentConf.HTMLReportsFolder, defaultAutomationTabReportName);
+            string reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(RI, hTMLReportConfiguration, templatesFolder, outputFolder);
+            return reportsResultFolder;
+        }
+
+
+        private void GenerateLastExecutedItemReport()
+        {
+            ExecutionLoggerConfiguration _selectedExecutionLoggerConfiguration =  WorkSpace.UserProfile.Solution.ExecutionLoggerConfigurationSetList.Where(x => (x.IsSelected == true)).FirstOrDefault();
+            if (!_selectedExecutionLoggerConfiguration.ExecutionLoggerConfigurationIsEnabled)
+            {
+                Reporter.ToUser(eUserMsgKey.ExecutionsResultsProdIsNotOn);
+                return;
+            }
+            //get logger files
+            string exec_folder = Ginger.Run.ExecutionLogger.GetLoggerDirectory(_selectedExecutionLoggerConfiguration.ExecutionLoggerConfigurationExecResultsFolder + "\\" + Ginger.Run.ExecutionLogger.defaultAutomationTabLogName);
+            //create the report
+
+            string reportsResultFolder = RunReportWithAutomateValues(new ReportInfo(exec_folder));
 
             if (reportsResultFolder == string.Empty)
             {
@@ -1381,6 +1389,7 @@ namespace Ginger
                 }
             }
         }
+
 
         private void btnOfflineExecutionHTMLReport_click(object sender, RoutedEventArgs e)
         {
@@ -1408,7 +1417,8 @@ namespace Ginger
                 //create the HTML report
                 try
                 {
-                    string reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(new ReportInfo(exec_folder));
+                    string reportsResultFolder = RunReportWithAutomateValues(new ReportInfo(exec_folder));
+
                     if (reportsResultFolder == string.Empty)
                     {
                         Reporter.ToUser(eUserMsgKey.StaticWarnMessage, "Failed to generate the report for the '" + App.BusinessFlow.Name + "' " + GingerDicser.GetTermResValue(eTermResKey.BusinessFlow) + ", please execute it fully first.");
