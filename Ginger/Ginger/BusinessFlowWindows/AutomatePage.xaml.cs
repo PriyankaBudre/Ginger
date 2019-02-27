@@ -1344,7 +1344,7 @@ namespace Ginger
                 Reporter.ToUser(eUserMsgKey.ExecutionsResultsProdIsNotOn);
                 return;
             }
-            HTMLReportsConfiguration currentConf =  WorkSpace.UserProfile.Solution.HTMLReportsConfigurationSetList.Where(x => (x.IsSelected == true)).FirstOrDefault();
+            
             //get logger files
             string exec_folder = Ginger.Run.ExecutionLogger.GetLoggerDirectory(_selectedExecutionLoggerConfiguration.ExecutionLoggerConfigurationExecResultsFolder + "\\" + Ginger.Run.ExecutionLogger.defaultAutomationTabLogName);
             //create the report
@@ -1352,16 +1352,17 @@ namespace Ginger
 
             var HTMLReportConfigurations = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<HTMLReportConfiguration>();
             HTMLReportConfiguration hTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsSelected == true)).FirstOrDefault();
-
             if (hTMLReportConfiguration == null)
             {
                 hTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsDefault == true)).FirstOrDefault();
             }
 
-            string defaultAutomationTabReportName = "{name_to_replace}_{date_to_replace}_AutomationTab_{objectType_to_replace}";
+            string templatesFolder = Path.Combine(Amdocs.Ginger.Common.GeneralLib.General.GetExecutingDirectory(), "Reports", "GingerExecutionReport");
 
+            string defaultAutomationTabReportName = "{name_to_replace}_{date_to_replace}_AutomationTab_{objectType_to_replace}";
+            HTMLReportsConfiguration currentConf = WorkSpace.UserProfile.Solution.HTMLReportsConfigurationSetList.Where(x => (x.IsSelected == true)).FirstOrDefault();
             string outPutFolder = Path.Combine(currentConf.HTMLReportsFolder, defaultAutomationTabReportName);
-            string reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(new ReportInfo(exec_folder), hTMLReportConfiguration, exec_folder, outPutFolder);
+            string reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(new ReportInfo(exec_folder), hTMLReportConfiguration, templatesFolder, outPutFolder);
 
             if (reportsResultFolder == string.Empty)
             {
