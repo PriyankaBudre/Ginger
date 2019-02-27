@@ -2701,13 +2701,6 @@ namespace Ginger.Reports.GingerExecutionReport
             gingerExecutionReport.currentTemplate = HTMLReportConfiguration;
             gingerExecutionReport.HTMLReportMainFolder = hTMLOutputFolder;
 
-
-            if (Directory.Exists(gingerExecutionReport.HTMLReportMainFolder))
-            {
-                CleanDirectory(gingerExecutionReport.HTMLReportMainFolder);
-            }
-            
-
             switch (RI.reportInfoLevel)
             {
                 case ReportInfo.ReportInfoLevel.RunSetLevel:
