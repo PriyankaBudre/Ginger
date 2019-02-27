@@ -29,7 +29,7 @@ using System.Reflection;
 namespace Amdocs.Ginger.Common.GeneralLib
 {
     public static class General
-    {      
+    {
 
 
         public static string LocalUserApplicationDataFolderPath
@@ -64,7 +64,7 @@ namespace Amdocs.Ginger.Common.GeneralLib
             }
         }
 
-        
+
 
         /// <summary>
         /// Should use the function temporary till solution will be implemented for VE fields search
@@ -79,7 +79,7 @@ namespace Amdocs.Ginger.Common.GeneralLib
                 fieldName == "ObjFolderName" || fieldName == "ContainingFolder" || fieldName == "ContainingFolderFullPath" ||
                 fieldName == "ActInputValues" || fieldName == "ActReturnValues" || fieldName == "ActFlowControls" ||
                 fieldName == "ScreenShots" ||
-                fieldName == "ListStringValue" || fieldName == "ListDynamicValue")
+                fieldName == "ListStringValue" || fieldName == "ListDynamicValue" || fieldName == "ValueExpression")
             {
                 return true;
             }
