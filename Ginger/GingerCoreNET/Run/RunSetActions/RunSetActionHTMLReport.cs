@@ -25,7 +25,7 @@ using Ginger.Reports;
 using Amdocs.Ginger;
 using amdocs.ginger.GingerCoreNET;
 using Amdocs.Ginger.Common.InterfacesLib;
-
+using System.IO;
 
 namespace Ginger.Run.RunSetActions
 {
@@ -83,6 +83,8 @@ namespace Ginger.Run.RunSetActions
                 if (!string.IsNullOrEmpty(selectedHTMLReportTemplateID.ToString()))
                 {
                     ObservableList<HTMLReportConfiguration> HTMLReportConfigurations = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<HTMLReportConfiguration>();
+                    HTMLReportConfiguration hTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.ID == selectedHTMLReportTemplateID)).FirstOrDefault();
+                    string templatesFolder = Path.Combine(Amdocs.Ginger.Common.GeneralLib.General.GetExecutingDirectory(), "Reports", "GingerExecutionReport");
                     if ((isHTMLReportFolderNameUsed) && (HTMLReportFolderName != null) && (HTMLReportFolderName != string.Empty))
                     {
                         string currentHTMLFolderName = string.Empty;
@@ -94,11 +96,12 @@ namespace Ginger.Run.RunSetActions
                         {
                             currentHTMLFolderName = HTMLReportFolderName;
                         }
-                        reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(new ReportInfo(runSetFolder));
+                        reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(new ReportInfo(runSetFolder), hTMLReportConfiguration, templatesFolder, currentHTMLFolderName);
                     }
                     else
                     {
-                        reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(new ReportInfo(runSetFolder));
+                        string outputFolder = Path.Combine(currentConf.HTMLReportsFolder, runSetFolder);
+                        reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(new ReportInfo(runSetFolder), hTMLReportConfiguration, templatesFolder, outputFolder);
                     }
                 }
                 else
