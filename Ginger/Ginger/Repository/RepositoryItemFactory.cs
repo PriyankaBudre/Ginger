@@ -789,7 +789,14 @@ namespace Ginger.Repository
             {
                 emailReadyHtml = emailReadyHtml.Replace("<!--WARNING-->", "");
                 ObservableList<HTMLReportConfiguration> HTMLReportConfigurations = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<HTMLReportConfiguration>();
-                reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(new ReportInfo(runSetFolder));
+                HTMLReportConfiguration hTMLReportConfiguration = HTMLReportConfigurations.Where(x => x.IsSelected).FirstOrDefault();
+                if (hTMLReportConfiguration == null)
+                {
+                    hTMLReportConfiguration = HTMLReportConfigurations.Where(x => x.IsDefault).FirstOrDefault();
+                }
+                string templatesFolder = Path.Combine(Amdocs.Ginger.Common.GeneralLib.General.GetExecutingDirectory(), "Reports", "GingerExecutionReport");
+
+                reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(new ReportInfo(runSetFolder), hTMLReportConfiguration, templatesFolder, extraInformationCalculated);
             }
         }
 

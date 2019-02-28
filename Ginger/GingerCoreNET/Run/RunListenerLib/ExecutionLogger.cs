@@ -1027,7 +1027,7 @@ namespace Ginger.Run
                 reportsResultFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(new ReportInfo(exec_folder));
                 if (reportsResultFolder == string.Empty)
                 {
-                    //TODO     AppReporter.ToUser(eUserMsgKey.StaticWarnMessage, "Failed to generate the report for the '" + WorkSpace.Businessflow.Name + "' " + GingerDicser.GetTermResValue(eTermResKey.BusinessFlow) + ", please execute it fully first.");
+                    Reporter.ToUser(eUserMsgKey.AutomationTabExecResultsNotExists);
                     return;
                 }
                 else

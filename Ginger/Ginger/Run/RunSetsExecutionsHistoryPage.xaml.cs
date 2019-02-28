@@ -262,7 +262,6 @@ namespace Ginger.Run
             }
 
             string runSetFolder = ExecutionLogger.GetLoggerDirectory(((RunSetReport)grdExecutionsHistory.CurrentItem).LogFolder);
-            //string runSetFolder = App.RunsetExecutor.RunSetConfig.LastRunsetLoggerFolder;
             string reportsResultFolder = Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(new ReportInfo(runSetFolder));
 
             if (reportsResultFolder == string.Empty)

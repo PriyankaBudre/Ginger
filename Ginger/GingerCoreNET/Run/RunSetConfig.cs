@@ -69,7 +69,11 @@ namespace Ginger.Run
 
         public override string GetNameForFileName() { return Name; }
 
-        public string LastRunsetLoggerFolder { get; set;}
+        public string LastRunsetLoggerFolder
+        {
+            get;
+            set;
+        }
         public bool RunsetExecLoggerPopulated
         {
             get
