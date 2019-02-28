@@ -591,8 +591,10 @@ namespace Ginger.Reports
 
             ReportInfo RI = new ReportInfo(mPreviewDummyReportDataPath);
 
-            string reportsPath = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(RI);
-            // Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(new ReportInfo(mPreviewDummyReportDataPath));
+            string templatesFolder = Path.Combine(Amdocs.Ginger.Common.GeneralLib.General.GetExecutingDirectory(), "Reports", "GingerExecutionReport");
+
+            //string reportsPath = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReport(RI);
+            string reportsPath = GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(new ReportInfo(mPreviewDummyReportDataPath),_HTMLReportConfiguration, templatesFolder,);
             WBP = new WebBrowserPage();
             frmBrowser.Content = WBP;
             browser = WBP.GetBrowser();
