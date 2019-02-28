@@ -2672,7 +2672,14 @@ namespace Ginger.Reports.GingerExecutionReport
         public static string CreateGingerExecutionReport(ReportInfo RI)
         {
             var HTMLReportConfigurations = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<HTMLReportConfiguration>();
-            HTMLReportConfiguration hTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsDefault == true)).FirstOrDefault();
+
+            HTMLReportConfiguration hTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsSelected == true)).FirstOrDefault();
+
+            if (hTMLReportConfiguration == null)
+            {
+                hTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsDefault == true)).FirstOrDefault();
+            }
+
             HTMLReportsConfiguration currentConf = WorkSpace.Instance.Solution.HTMLReportsConfigurationSetList.Where(x => (x.IsSelected == true)).FirstOrDefault();
 
             string fileName = string.Empty;
