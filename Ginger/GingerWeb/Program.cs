@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using GingerWeb.UsersLib;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace GingerWeb
 {
@@ -17,25 +10,20 @@ namespace GingerWeb
         {
             General.init();
 
-            CreateWebHostBuilder(args).Build().Run();
-            //CreateWebHostBuilderAllIPs15000(args).Build().Run();
-
-            
+            //CreateWebHostBuilder(args).Build().Run();
+            CreateWebHostBuilderAllIPs15000(args).Build().Run();          
         }
 
         private static IWebHostBuilder CreateWebHostBuilderAllIPs15000(string[] args)
         {
-
             var host = WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .ConfigureKestrel((context, options) =>
                 {
                     // Set properties and call methods on options
                     //!!!!!!!!!!!!!!!!!!!!! Config which web host to use and port
-                    options.ListenAnyIP(15000);  // Listen on any IP + removed HTTPS redirect at StartUp class
-                    
+                    options.ListenAnyIP(15000);  // Listen on any IP + removed HTTPS redirect at StartUp class                    
                 });
-
 
             //var config = new ConfigurationBuilder()
             //    .AddCommandLine(args)
@@ -61,11 +49,8 @@ namespace GingerWeb
             //.UseUrls("http://localhost:5055");
             // .Build();
 
-
-            return host;
-            
+            return host;            
         }
-
        
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
