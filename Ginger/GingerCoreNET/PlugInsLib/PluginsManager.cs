@@ -303,6 +303,7 @@ namespace Amdocs.Ginger.Repository
             try
             {
                 ObservableList<OnlinePluginPackage> OnlinePlugins = null;
+                //TODO: Run parallel !!!
                 foreach (PluginPackage SolutionPlugin in mPluginPackages)
                 {
                     //TODO: Make it work for linux environments 
@@ -317,23 +318,23 @@ namespace Amdocs.Ginger.Repository
 
                         OnlinePluginPackageRelease OPR = OnlinePlugin.Releases.Where(x => x.Version == SolutionPlugin.PluginPackageVersion).FirstOrDefault();
 
-                            if (OPR != null)
-                            {
-                                OnlinePlugin.InstallPluginPackage(OPR);
-                            }
-                            //WorkSpace.Instance.PlugInsManager.InstallPluginPackage(OnlinePlugin, OPR);
+                        if (OPR != null)
+                        {
+                            OnlinePlugin.InstallPluginPackage(OPR);
                         }
-
-
+                        else
+                        {
+                            // TODO: show a message plugin version not found !!!!!!!!!
+                        }
+                        //WorkSpace.Instance.PlugInsManager.InstallPluginPackage(OnlinePlugin, OPR);                        
                     }
                 }
+            }
+            finally
+            {
+                WorkSpace.Instance.PlugInsManager.BackgroudDownloadInprogress = false;
+            }            
+        }
 
-                finally
-                {
-                    WorkSpace.Instance.PlugInsManager.BackgroudDownloadInprogress = false;
-                }
-            });
-
-         }
     }
 }
