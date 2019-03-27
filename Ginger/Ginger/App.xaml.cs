@@ -164,6 +164,8 @@ namespace Ginger
 
         public new static MainWindow MainWindow { get; set; }
 
+        private Dictionary<string, Int32> mExceptionsDic = new Dictionary<string, int>();
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {            
             Console.WriteLine("Starting Ginger");
@@ -302,19 +304,19 @@ namespace Ginger
             phase = "Loading User Profile";
             Reporter.ToLog(eLogLevel.DEBUG, phase);
             MainWindow.LoadingInfo(phase);
-            WorkSpace.UserProfile = UserProfile.LoadUserProfile();
+            WorkSpace.Instance.UserProfile = UserProfile.LoadUserProfile();
 
             phase = "Configuring User Type";
             Reporter.ToLog(eLogLevel.DEBUG, phase);
             MainWindow.LoadingInfo(phase);
-            WorkSpace.UserProfile.LoadUserTypeHelper();
+            WorkSpace.Instance.UserProfile.LoadUserTypeHelper();
 
 
             phase = "Loading User Selected Resource Dictionaries";
             Reporter.ToLog(eLogLevel.DEBUG, phase);
             MainWindow.LoadingInfo(phase);
-            if (WorkSpace.UserProfile != null)
-                LoadApplicationDictionaries(Amdocs.Ginger.Core.eSkinDicsType.Default, WorkSpace.UserProfile.TerminologyDictionaryType);
+            if (WorkSpace.Instance.UserProfile != null)
+                LoadApplicationDictionaries(Amdocs.Ginger.Core.eSkinDicsType.Default, WorkSpace.Instance.UserProfile.TerminologyDictionaryType);
             else
                 LoadApplicationDictionaries(Amdocs.Ginger.Core.eSkinDicsType.Default, GingerCore.eTerminologyType.Default);
 

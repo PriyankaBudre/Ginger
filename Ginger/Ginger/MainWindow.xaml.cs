@@ -74,14 +74,14 @@ namespace Ginger
 
                 //User Profile
                 App.PropertyChanged += App_PropertyChanged;
-                WorkSpace.UserProfile.PropertyChanged += UserProfilePropertyChanged;
-                if ( WorkSpace.UserProfile.GingerStatus == eGingerStatus.Active)
+                WorkSpace.Instance.UserProfile.PropertyChanged += WorkSpacePropertyChanged;
+                if ( WorkSpace.Instance.UserProfile.GingerStatus == eGingerStatus.Active)
                 {
                     Reporter.ToStatus(eStatusMsgKey.ExitMode);
                 }
-                WorkSpace.UserProfile.GingerStatus = eGingerStatus.Active;
-                WorkSpace.UserProfile.SaveUserProfile();
-                WorkSpace.UserProfile.RecentSolutionsAsObjects.CollectionChanged += RecentSolutionsObjects_CollectionChanged;
+                WorkSpace.Instance.UserProfile.GingerStatus = eGingerStatus.Active;
+                WorkSpace.Instance.UserProfile.SaveUserProfile();
+                WorkSpace.Instance.UserProfile.RecentSolutionsAsObjects.CollectionChanged += RecentSolutionsObjects_CollectionChanged;
 
                 //Main Menu                            
                 xGingerIconImg.ToolTip = App.AppFullProductName + Environment.NewLine + "Version " + App.AppVersion;
