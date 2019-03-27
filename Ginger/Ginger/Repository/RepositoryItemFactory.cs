@@ -818,24 +818,26 @@ namespace Ginger.Repository
             return null;
         }
 
-        public string GenerateReportForREportTemplate(string ReportTemplateName, object RIf, object RTs )
+        public string GenerateReportForREportTemplate(string ReportTemplateName, object RIf, object RTs)
         {
-            ReportInfo RI = (ReportInfo)RIf;
-            ReportTemplate RT = (ReportTemplate)RTs;
-            ReportPage RP = new ReportPage(RI, RT.Xaml);
-            string FileName = Path.GetTempPath() + ReportTemplateName + ".rtf";
+            // Cleanup not using pdf reports !!!!!!
+            //ReportInfo RI = (ReportInfo)RIf;
+            //ReportTemplate RT = (ReportTemplate)RTs;
+            //ReportPage RP = new ReportPage(RI, RT.Xaml);
+            //string FileName = Path.GetTempPath() + ReportTemplateName + ".rtf";
 
-            if (System.IO.File.Exists(FileName))
-                FileName = Path.GetTempPath() + " " + DateTime.Now.ToString("dMMMyyyy_HHmmss_fff") + "_" + ReportTemplateName + ".rtf";
+            //if (System.IO.File.Exists(FileName))
+            //    FileName = Path.GetTempPath() + " " + DateTime.Now.ToString("dMMMyyyy_HHmmss_fff") + "_" + ReportTemplateName + ".rtf";
 
-            GC.Collect();
-            RP.SaveReport(FileName);
+            //GC.Collect();
+            //RP.SaveReport(FileName);
 
-            string PDFFileName = FileName.Replace(".rtf", ".pdf");
+            //string PDFFileName = FileName.Replace(".rtf", ".pdf");
 
-            RTFtoPDF.Convert(FileName, PDFFileName);
+            //RTFtoPDF.Convert(FileName, PDFFileName);
 
-            return PDFFileName;
+            //return PDFFileName;
+            return null;
         }
 
         public void ExecuteActScriptAction(string ScriptFileName, string SolutionFolder)
