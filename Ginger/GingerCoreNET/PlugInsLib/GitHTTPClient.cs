@@ -51,6 +51,7 @@ namespace Amdocs.Ginger.CoreNET.PlugInsLib
 
         internal static T GetJSON<T>(string url)
         {            
+            // Not working when no internet !!!!!!!! add try catch !!!
             string packagesjson = GetResponseString(url).Result;
 
             T list = JsonConvert.DeserializeObject<T>(packagesjson);
