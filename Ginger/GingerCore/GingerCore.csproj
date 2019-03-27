@@ -200,15 +200,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>D:\Sandesh workspace\Microsoft.Office.Interop.Outlook.dll</HintPath>
     </Reference>
-    <Reference Include="MigraDoc.DocumentObjectModel-WPF">
-      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\MigraDoc.DocumentObjectModel-WPF.dll</HintPath>
-    </Reference>
-    <Reference Include="MigraDoc.Rendering-WPF">
-      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\MigraDoc.Rendering-WPF.dll</HintPath>
-    </Reference>
-    <Reference Include="MigraDoc.RtfRendering-WPF">
-      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\MigraDoc.RtfRendering-WPF.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Posix">
       <HintPath>..\packages\Mono.Posix.4.0.0.0\lib\net40\Mono.Posix.dll</HintPath>
     </Reference>
@@ -231,12 +222,6 @@
     </Reference>
     <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
       <HintPath>..\packages\Oracle.ManagedDataAccess.12.1.24160719\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
-    </Reference>
-    <Reference Include="PdfSharp-WPF">
-      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\PdfSharp-WPF.dll</HintPath>
-    </Reference>
-    <Reference Include="PdfSharp.Charting-WPF">
-      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\PdfSharp.Charting-WPF.dll</HintPath>
     </Reference>
     <Reference Include="PerfectoLab, Version=18.4.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PerfectoLab.18.4.0.1\lib\PerfectoLab.dll</HintPath>

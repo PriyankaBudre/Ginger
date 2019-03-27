@@ -1915,7 +1915,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Reports\PDFAutomationReport.cs" />
     <Compile Include="Repository\ActionsRepositoryPage.xaml.cs">
       <DependentUpon>ActionsRepositoryPage.xaml</DependentUpon>
     </Compile>
