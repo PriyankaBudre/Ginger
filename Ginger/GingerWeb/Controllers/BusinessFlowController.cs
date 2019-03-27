@@ -155,6 +155,8 @@ namespace GingerWeb.Controllers
             //}
         }
 
+        // Move to GingerCoreNET !!!!!!!!!!!!!!!!!!!!
+        // Use CLI
         //ExecutionLogger executionLogger;
         void RunFlow(BusinessFlow businessFlow)
         {

@@ -21,8 +21,8 @@ using amdocs.ginger.GingerCoreNET;
 using Amdocs.Ginger;
 using Amdocs.Ginger.Common;
 using Amdocs.Ginger.Common.InterfacesLib;
-using Amdocs.Ginger.Common.Repository;
 using Amdocs.Ginger.CoreNET.Repository;
+using Amdocs.Ginger.CoreNET.RunLib.CLILib;
 using Amdocs.Ginger.IO;
 using Amdocs.Ginger.Repository;
 using Ginger.BusinessFlowWindows;
@@ -46,7 +46,6 @@ using GingerCore.SourceControl;
 using GingerCore.Variables;
 using GingerCoreNET.SourceControl;
 using GingerWPF;
-using GingerWPF.UserControlsLib.UCTreeView;
 using GingerWPF.WorkSpaceLib;
 using System;
 using System.Collections.Concurrent;
@@ -55,6 +54,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -114,6 +115,8 @@ namespace Ginger
             }
         }
 
+        
+
         private static string mAppShortVersion = String.Empty;
         public static string AppShortVersion
         {
@@ -169,7 +172,44 @@ namespace Ginger
         public static TextBlock RunsetActionTextbox = null;//???
 
         public new static MainWindow MainWindow { get; set; }
-        
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {            
+            Console.WriteLine("Starting Ginger");
+
+            if (e.Args.Length == 0)
+            {
+                MainWindow = new MainWindow();
+                MainWindow.Show();
+
+                LoadApplicationDictionaries();
+                InitApp();
+
+                MainWindow.Init();
+                HideSplash();                
+            }
+            else
+            {
+                InitClassTypesDictionary();
+                Reporter.WorkSpaceReporter = new GingerWorkSpaceReporter();
+                // MessageBox.Show("arg0 = " + e.Args[0]);
+                CLI.ExecuteArgs(e.Args);
+                // do proper close !!!         
+                System.Windows.Application.Current.Shutdown();
+            }
+        }
+
+        private void HideSplash()
+        {
+            // Hide the splash after one second
+            Task.Factory.StartNew(() => {
+                this.Dispatcher.Invoke(() => {
+                    Thread.Sleep(1000);
+                    MainWindow.xGingerSplash.Visibility = Visibility.Collapsed;
+                });
+            });
+        }
+
         private Dictionary<string, Int32> _exceptionsDic = new Dictionary<string, int>();
 
        
@@ -243,8 +283,7 @@ namespace Ginger
                 handler(null, new PropertyChangedEventArgs(name));
             }
         }
-
-        public static SplashWindow AppSplashWindow { get; set; }
+        
        
 
         public static bool RunningFromUnitTest = false;
@@ -308,7 +347,7 @@ namespace Ginger
                     // This Ginger is running with run set config will do the run and close Ginger
                     WorkSpace.RunningInExecutionMode = true;
                     Reporter.ReportAllAlsoToConsole = true; //needed so all reportering will be added to Consol
-                    //Reporter.AppLogLevel = eAppReporterLoggingLevel.Debug;//needed so all reportering will be added to Log file
+                    //Reporter.AppLogLevel = eAppReporterLoggingLevel.Debug;//needed so all reportering will be added to Log file                    
                 }
             }
 
@@ -335,8 +374,9 @@ namespace Ginger
 
             Reporter.ToLog(eLogLevel.INFO, "######################## Application version " + App.AppVersion + " Started ! ########################");
 
-            AppSplashWindow.LoadingInfo("Init Application");
-            WorkSpace.AppVersion = App.AppShortVersion;
+            
+            MainWindow.LoadingInfo("Init Application");
+            WorkSpace.AppVersion = App.AppShortVersion;                        
             // We init the classes dictionary for the Repository Serializer only once
             InitClassTypesDictionary();
 
@@ -344,18 +384,18 @@ namespace Ginger
 
             phase = "Loading User Profile";
             Reporter.ToLog(eLogLevel.DEBUG, phase);
-            AppSplashWindow.LoadingInfo(phase);
+            MainWindow.LoadingInfo(phase);
             WorkSpace.UserProfile = UserProfile.LoadUserProfile();
 
             phase = "Configuring User Type";
             Reporter.ToLog(eLogLevel.DEBUG, phase);
-            AppSplashWindow.LoadingInfo(phase);
+            MainWindow.LoadingInfo(phase);
             WorkSpace.UserProfile.LoadUserTypeHelper();
 
 
             phase = "Loading User Selected Resource Dictionaries";
             Reporter.ToLog(eLogLevel.DEBUG, phase);
-            AppSplashWindow.LoadingInfo(phase);
+            MainWindow.LoadingInfo(phase);
             if (WorkSpace.UserProfile != null)
                 LoadApplicationDictionaries(Amdocs.Ginger.Core.eSkinDicsType.Default, WorkSpace.UserProfile.TerminologyDictionaryType);
             else
@@ -369,14 +409,11 @@ namespace Ginger
             AutoLogProxy.Init(App.AppVersion);
 
             Reporter.ToLog(eLogLevel.DEBUG, "Initializing the Source control");
-            AppSplashWindow.LoadingInfo(phase);
+            MainWindow.LoadingInfo(phase);           
 
             phase = "Loading the Main Window";
             Reporter.ToLog(eLogLevel.DEBUG, phase);
-            AppSplashWindow.LoadingInfo(phase);
-            MainWindow = new Ginger.MainWindow();
-            MainWindow.Show();
-            MainWindow.Init();
+            MainWindow.LoadingInfo(phase);         
 
             // If we have command line params process them and do not load MainWindow
             if (WorkSpace.RunningInExecutionMode == true)
@@ -384,8 +421,7 @@ namespace Ginger
                 HandleAutoRunMode();
             }
 
-            //AppSplashWindow.LoadingInfo("Ready!");
-            App.AppSplashWindow = null;
+            MainWindow.LoadingInfo("Ready!");            
 
             AutoLogProxy.LogAppOpened();
 
@@ -530,7 +566,7 @@ namespace Ginger
             Reporter.ToLog(eLogLevel.INFO, phase);
             
             AutoLogProxy.LogAppOpened();
-            AppSplashWindow.LoadingInfo(phase);
+            MainWindow.LoadingInfo(phase);
 
             var result = await App.RunsetExecutor.RunRunSetFromCommandLine();
 
@@ -964,6 +1000,7 @@ namespace Ginger
             }
         }
 
-        //public BusinessFlow BusinessFlow;
+
+
     }
 }

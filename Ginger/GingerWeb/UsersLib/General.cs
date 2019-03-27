@@ -45,7 +45,7 @@ namespace GingerWeb.UsersLib
             WorkSpace.Init(ws);
 
             // WorkSpace.Instance.OpenSolution(@"C:\yaron\GingerSolution\Plugins\Plugins");
-            OpenSolution(@"C:\yaron\GingerSolution\Plugins\Plugins");
+            OpenSolution(@"C:\yaron\GingerSolution\Plugins\Plugins");  // !!!!!!!!!!!!!!!!!!
             WorkSpace.Instance.Solution = (Solution)(ISolution)SR.RepositorySerializer.DeserializeFromFile(Path.Combine(SR.SolutionFolder, "Ginger.Solution.xml"));
 
             var gg = WorkSpace.Instance.LocalGingerGrid;

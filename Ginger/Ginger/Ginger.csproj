@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3EFCB931-48FC-45BF-9598-0F8138802411}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ginger</RootNamespace>
     <AssemblyName>Ginger</AssemblyName>
@@ -94,6 +94,10 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
     <Reference Include="ALMRestClient">
@@ -175,15 +179,6 @@
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MigraDoc.DocumentObjectModel-WPF">
-      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\MigraDoc.DocumentObjectModel-WPF.dll</HintPath>
-    </Reference>
-    <Reference Include="MigraDoc.Rendering-WPF">
-      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\MigraDoc.Rendering-WPF.dll</HintPath>
-    </Reference>
-    <Reference Include="MigraDoc.RtfRendering-WPF">
-      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\MigraDoc.RtfRendering-WPF.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Posix">
       <HintPath>..\packages\Mono.Posix.4.0.0.0\lib\net40\Mono.Posix.dll</HintPath>
     </Reference>
@@ -205,12 +200,6 @@
     <Reference Include="Open3270, Version=1.5.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>DLLs\Open3270.dll</HintPath>
-    </Reference>
-    <Reference Include="PdfSharp-WPF">
-      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\PdfSharp-WPF.dll</HintPath>
-    </Reference>
-    <Reference Include="PdfSharp.Charting-WPF">
-      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\PdfSharp.Charting-WPF.dll</HintPath>
     </Reference>
     <Reference Include="PresentationUI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="QCRestClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -1965,9 +1954,6 @@
     <Compile Include="SolutionWindows\TreeViewItems\TreeViewItemBase.cs" />
     <Compile Include="ALM\QC\UploadBusinessFlowsPage.xaml.cs">
       <DependentUpon>UploadBusinessFlowsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SplashWindow.xaml.cs">
-      <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
@@ -4299,10 +4285,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ALM\QC\UploadBusinessFlowsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SplashWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

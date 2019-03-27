@@ -28,7 +28,6 @@ using Ginger.Run;
 using Ginger.Run.RunSetActions;
 using GingerCore;
 using GingerCore.Actions;
-using GingerCore.Activities;
 using GingerCore.ALM;
 using GingerCore.DataSource;
 using GingerCore.Drivers;
@@ -45,7 +44,6 @@ using GingerCore.Drivers.PBDriver;
 using GingerCore.Drivers.WebServicesDriverLib;
 using GingerCore.Drivers.WindowsLib;
 using GingerCore.Environments;
-using GingerCore.Variables;
 using GingerCoreNET.SourceControl;
 using System;
 using System.Collections.Generic;
@@ -378,8 +376,7 @@ namespace Ginger.Repository
 
         public void RunRunSetFromCommandLine()
         {
-            App.MainWindow.Hide();
-            App.AppSplashWindow.Close();
+            App.MainWindow.Hide();            
             AutoRunWindow RP = new AutoRunWindow();
             RP.Show();
         }

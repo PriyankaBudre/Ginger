@@ -33,7 +33,6 @@ using Ginger.SolutionGeneral;
 using Ginger.SolutionWindows;
 using Ginger.SourceControl;
 using Ginger.User;
-using GingerCore;
 using GingerCore.Repository.UpgradeLib;
 using GingerCoreNET.SourceControl;
 using GingerWPF;
@@ -43,10 +42,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Ginger
@@ -58,8 +55,7 @@ namespace Ginger
 
         
 
-        private bool mAskUserIfToClose = true;
-        private long _currentClickedTabIndex = -1;
+        private bool mAskUserIfToClose = true;        
 
         public MainWindow()
         {
@@ -78,14 +74,14 @@ namespace Ginger
 
                 //User Profile
                 App.PropertyChanged += App_PropertyChanged;
-                 WorkSpace.UserProfile.PropertyChanged += UserProfilePropertyChanged;
+                WorkSpace.UserProfile.PropertyChanged += UserProfilePropertyChanged;
                 if ( WorkSpace.UserProfile.GingerStatus == eGingerStatus.Active)
                 {
                     Reporter.ToStatus(eStatusMsgKey.ExitMode);
                 }
-                 WorkSpace.UserProfile.GingerStatus = eGingerStatus.Active;
-                 WorkSpace.UserProfile.SaveUserProfile();
-                 WorkSpace.UserProfile.RecentSolutionsAsObjects.CollectionChanged += RecentSolutionsObjects_CollectionChanged;
+                WorkSpace.UserProfile.GingerStatus = eGingerStatus.Active;
+                WorkSpace.UserProfile.SaveUserProfile();
+                WorkSpace.UserProfile.RecentSolutionsAsObjects.CollectionChanged += RecentSolutionsObjects_CollectionChanged;
 
                 //Main Menu                            
                 xGingerIconImg.ToolTip = App.AppFullProductName + Environment.NewLine + "Version " + App.AppVersion;
@@ -121,8 +117,7 @@ namespace Ginger
 
             }
             catch (Exception ex)
-            {
-                App.AppSplashWindow.Close();
+            {                
                 Reporter.ToUser(eUserMsgKey.ApplicationInitError, ex.Message);
                 Reporter.ToLog(eLogLevel.ERROR, "Error in Init Main Window", ex);                
             }
@@ -360,6 +355,12 @@ namespace Ginger
             {
                 e.Cancel = true;
             }
+        }
+
+        internal void LoadingInfo(string text)
+        {
+            ShowStatus(eStatusMsgType.PROCESS, text);
+            GingerCore.General.DoEvents();
         }
 
         private void AppCleanUp()
@@ -1005,5 +1006,7 @@ namespace Ginger
         {
             System.Diagnostics.Process.Start("https://ginger.amdocs.com/");
         }
+
+        
     }
 }
