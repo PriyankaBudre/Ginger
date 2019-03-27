@@ -298,7 +298,10 @@ namespace Amdocs.Ginger.Repository
 
                             OnlinePluginPackageRelease OPR = OnlinePlugin.Releases.Where(x => x.Version == SolutionPlugin.PluginPackageVersion).FirstOrDefault();
 
-                            OnlinePlugin.InstallPluginPackage(OPR);
+                            if (OPR != null)
+                            {
+                                OnlinePlugin.InstallPluginPackage(OPR);
+                            }
                             //WorkSpace.Instance.PlugInsManager.InstallPluginPackage(OnlinePlugin, OPR);
                         }
 
