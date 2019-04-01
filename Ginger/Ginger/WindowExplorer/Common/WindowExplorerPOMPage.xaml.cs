@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ namespace Ginger.WindowExplorer.Common
         private void FillPOMS()
         {
             //List<ApplicationPOM> list = new List<ApplicationPOM>();
-            //string folder = Path.Combine( WorkSpace.UserProfile.Solution.Folder, @"Applications\" + mApplicationAgent.AppName + @"\Page Objects Models\" );  // TODO: use const or POM helper
+            //string folder = Path.Combine( WorkSpace.Instance.Solution.Folder, @"Applications\" + mApplicationAgent.AppName + @"\Page Objects Models\" );  // TODO: use const or POM helper
             //string[] POMFolders = Directory.GetDirectories(folder);
 
 

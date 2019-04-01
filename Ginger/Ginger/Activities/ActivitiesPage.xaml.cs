@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -46,20 +46,29 @@ namespace Ginger.BusinessFlowFolder
     public partial class ActivitiesPage : Page
     {
         BusinessFlow mBusinessFlow;
-        Context mContext = new Context();
+        Context mContext;
 
-        public ActivitiesPage(BusinessFlow businessFlow, General.RepositoryItemPageViewMode editMode = General.RepositoryItemPageViewMode.SharedReposiotry)
+        public ActivitiesPage(BusinessFlow businessFlow, General.RepositoryItemPageViewMode editMode = General.RepositoryItemPageViewMode.SharedReposiotry, Context context = null)
         {
             InitializeComponent();
             
+            if (context != null)
+            {
+                mContext = context;
+            }
+            else
+            {
+                mContext = new Context();
+            }
             UpdateBusinessFlow(businessFlow);
             if (editMode == General.RepositoryItemPageViewMode.Automation)
             {                
                 grdActivities.AddFloatingImageButton("@ContinueFlow_16x16.png", "Continue Run Activity", FloatingContinueRunActivityButton_Click, 4);
                 grdActivities.AddFloatingImageButton("@RunAction_20x20.png", "Run Selected Action", RunActionButton_Click, 4);
                 grdActivities.AddFloatingImageButton("@Run2_20x20.png", "Run " + GingerDicser.GetTermResValue(eTermResKey.Activity), RunFloatingButtonClicked, 4); 
-            }
-          
+            }                        
+           
+            mBusinessFlow.PropertyChanged += BusinessFlow_PropertyChanged;
             SetActivitiesGridView();
             RefreshActivitiesGrid();
             SetGridRowStyle();
@@ -115,7 +124,7 @@ namespace Ginger.BusinessFlowFolder
             if (mBusinessFlow != bf)
             {
                 mBusinessFlow = bf;
-                mContext.BusinessFlow = mBusinessFlow;
+                //mContext.BusinessFlow = mBusinessFlow;
                 if (mBusinessFlow != null)
                     mBusinessFlow.PropertyChanged += BusinessFlow_PropertyChanged;
             }
@@ -132,15 +141,10 @@ namespace Ginger.BusinessFlowFolder
 
         private void RunFloatingButtonClicked(object sender, RoutedEventArgs e)
         {
-            App.AutomateTabGingerRunner.ExecutionLogger.Configuration.ExecutionLoggerAutomationTabContext = Ginger.Reports.ExecutionLoggerConfiguration.AutomationTabContext.ActivityRun;
+            mContext.Runner.ExecutionLogger.Configuration.ExecutionLoggerAutomationTabContext = Ginger.Reports.ExecutionLoggerConfiguration.AutomationTabContext.ActivityRun;
             App.OnAutomateBusinessFlowEvent(AutomateEventArgs.eEventType.RunCurrentActivity, null); 
         }
-
-        private void CurrentActivity_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "HandlerType")
-                grdActivities.setDefaultView();
-        }      
+               
 
         private void grdActivities_PreviewDragItem(object sender, EventArgs e)
         {
@@ -185,8 +189,7 @@ namespace Ginger.BusinessFlowFolder
             if (mBusinessFlow != null)
             {
                 mBusinessFlow.CurrentActivity = (Activity)grdActivities.CurrentItem;
-                if (mBusinessFlow.CurrentActivity != null)
-                  ((Activity)  mBusinessFlow.CurrentActivity).PropertyChanged += CurrentActivity_PropertyChanged;
+                
             }
         }
 
@@ -292,15 +295,7 @@ namespace Ginger.BusinessFlowFolder
 
         private void EditActivity(object sender, RoutedEventArgs e)
         {
-            if (grdActivities.CurrentItem != null)
-            {
-                BusinessFlowWindows.ActivityEditPage w = new BusinessFlowWindows.ActivityEditPage((Activity)grdActivities.CurrentItem, activityParentBusinessFlow: mBusinessFlow);
-                w.ShowAsWindow();
-            }
-            else
-            {
-                Reporter.ToUser(eUserMsgKey.AskToSelectItem);
-            }
+            EditSelectedActivity();
         }
 
         private void AddActivity(object sender, RoutedEventArgs e)
@@ -335,8 +330,20 @@ namespace Ginger.BusinessFlowFolder
 
         private void grdActivities_grdMain_MouseDoubleClick(object sender, EventArgs e)
         {
-            BusinessFlowWindows.ActivityEditPage w = new BusinessFlowWindows.ActivityEditPage((Activity)grdActivities.CurrentItem, activityParentBusinessFlow:mBusinessFlow);
-            w.ShowAsWindow();
+            EditSelectedActivity();
+        }
+
+        private void EditSelectedActivity()
+        {
+            if (grdActivities.CurrentItem != null)
+            {
+                BusinessFlowWindows.ActivityEditPage w = new BusinessFlowWindows.ActivityEditPage((Activity)grdActivities.CurrentItem, activityParentBusinessFlow: mBusinessFlow, context: mContext);
+                w.ShowAsWindow();
+            }
+            else
+            {
+                Reporter.ToUser(eUserMsgKey.AskToSelectItem);
+            }
         }
 
         private void LoadActivitiesVariablesDependenciesPage(object sender, RoutedEventArgs e)

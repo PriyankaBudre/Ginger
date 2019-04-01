@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -149,9 +149,9 @@ namespace Ginger.Agents
             Reporter.ToStatus(eStatusMsgKey.StartAgent, null, AG.AgentName, AG.AppName);
             if (((Agent)AG.Agent).Status == Agent.eStatus.Running) ((Agent)AG.Agent).Close();
 
-            ((Agent)AG.Agent).ProjEnvironment = App.AutomateTabEnvironment;
+            ((Agent)AG.Agent).ProjEnvironment = mContext.Environment;
             ((Agent)AG.Agent).BusinessFlow = mContext.BusinessFlow; 
-            ((Agent)AG.Agent).SolutionFolder =  WorkSpace.UserProfile.Solution.Folder;
+            ((Agent)AG.Agent).SolutionFolder =  WorkSpace.Instance.Solution.Folder;
             ((Agent)AG.Agent).DSList = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<DataSourceBase>();
             ((Agent)AG.Agent).StartDriver();               
             //For ASCF, launch explorer automatically when launching Agent

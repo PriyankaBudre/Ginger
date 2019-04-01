@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -125,6 +125,7 @@ namespace Ginger.Variables
                     if (variablesParentObj != null)
                     {
                         mVariablesParentObj = variablesParentObj;
+                        ((Solution)mVariablesParentObj).PropertyChanged -= Solution_PropertyChanged;
                         ((Solution)mVariablesParentObj).PropertyChanged += Solution_PropertyChanged;//Hook to catch Solution Variables changes
                         LoadGridData();
                     }
@@ -161,6 +162,7 @@ namespace Ginger.Variables
             mVariablesParentObj = activity;
             if (mVariablesParentObj != null)
             {
+                ((Activity)mVariablesParentObj).PropertyChanged -= Activity_PropertyChanged;
                 ((Activity)mVariablesParentObj).PropertyChanged += Activity_PropertyChanged;//Hook to catch Activity Variables changes
                 LoadGridData();
             }
@@ -198,6 +200,7 @@ namespace Ginger.Variables
 
                 if (grdVariables.DataSourceList != null)
                 {
+                    grdVariables.DataSourceList.CollectionChanged -= VariablesPage_CollectionChanged;
                     grdVariables.DataSourceList.CollectionChanged += VariablesPage_CollectionChanged;
                 }
             }
@@ -218,7 +221,7 @@ namespace Ginger.Variables
                 view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.Formula), WidthWeight = 20, BindingMode = BindingMode.OneWay, ReadOnly = true });
                 view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.SetAsInputValue), Header = "Set as Input Value", WidthWeight = 10, MaxWidth = 200, StyleType = GridColView.eGridColStyleType.CheckBox });
                 view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.SetAsOutputValue), Header = "Set as Output Value", WidthWeight = 10, MaxWidth = 200, StyleType = GridColView.eGridColStyleType.CheckBox });
-                view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.LinkedVariableName), Header = "Linked Variable", WidthWeight = 10, BindingMode = BindingMode.OneWay, ReadOnly = true });
+                view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.LinkedVariableName), Header = "Linked " + GingerDicser.GetTermResValue(eTermResKey.Variable) , WidthWeight = 10, BindingMode = BindingMode.OneWay, ReadOnly = true });
                 view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.Value), Header = "Current Value", WidthWeight = 20, BindingMode = BindingMode.TwoWay, ReadOnly = true });
                 grdVariables.SetAllColumnsDefaultView(view);
             }
@@ -230,7 +233,7 @@ namespace Ginger.Variables
                 view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.Name), WidthWeight = 20, AllowSorting = true });
                 view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.Description), WidthWeight = 20 });
                 view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.Formula), WidthWeight = 20, BindingMode = BindingMode.OneWay, ReadOnly = true });
-                view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.LinkedVariableName), Header = "Linked Variable", WidthWeight = 15, BindingMode = BindingMode.OneWay, ReadOnly = true });
+                view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.LinkedVariableName), Header = "Linked " + GingerDicser.GetTermResValue(eTermResKey.Variable), WidthWeight = 15, BindingMode = BindingMode.OneWay, ReadOnly = true });
                 view.GridColsView.Add(new GridColView() { Field = nameof(VariableBase.Value), Header = "Current Value", WidthWeight = 15, BindingMode = BindingMode.OneWay, ReadOnly = true });
                 grdVariables.SetAllColumnsDefaultView(view);
 
@@ -275,7 +278,7 @@ namespace Ginger.Variables
         {
             if (e.PropertyName == nameof(Solution.Variables) && mVariablesLevel == eVariablesLevel.Solution)
             {
-                if ((Solution)mVariablesParentObj ==  WorkSpace.UserProfile.Solution)
+                if ((Solution)mVariablesParentObj ==  WorkSpace.Instance.Solution)
                 {
                     LoadGridData();
                 }

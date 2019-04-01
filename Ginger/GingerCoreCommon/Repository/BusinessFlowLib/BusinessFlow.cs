@@ -1,6 +1,6 @@
 ﻿#region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -523,19 +523,18 @@ namespace GingerCore
             }
 
             act.Active = true;
+
+            int selectedActIndex = -1;
+            if (CurrentActivity.Acts.CurrentItem != null)
+            {
+                selectedActIndex = CurrentActivity.Acts.IndexOf((Act)CurrentActivity.Acts.CurrentItem);
+            }
+
             CurrentActivity.Acts.Add(act);
 
-            if (setAfterCurrentAction)
+            if (setAfterCurrentAction && CurrentActivity.Acts.Count > 2 && selectedActIndex >= 0)
             {
-                int selectedActIndex = -1;
-                if (CurrentActivity.Acts.CurrentItem != null)
-                {
-                    selectedActIndex = CurrentActivity.Acts.IndexOf((Act)CurrentActivity.Acts.CurrentItem);
-                }
-                if (selectedActIndex >= 0)
-                {
-                    CurrentActivity.Acts.Move(CurrentActivity.Acts.Count - 1, selectedActIndex + 1);
-                }
+                CurrentActivity.Acts.Move(CurrentActivity.Acts.Count - 1, selectedActIndex + 1);
             }
         }
 

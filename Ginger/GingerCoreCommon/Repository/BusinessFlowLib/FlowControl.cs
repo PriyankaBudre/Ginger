@@ -1,6 +1,6 @@
 ﻿#region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -88,13 +88,29 @@ namespace GingerCore.FlowControlLib
     }
     public enum eFCOperator
     {
-        Legacy,
-        [EnumValueDescription("Modern")]
+        [EnumValueDescription("Action Passed")]
+        ActionPassed,
+        [EnumValueDescription("Action Failed")]
+        ActionFailed,
+        [EnumValueDescription("Last Activity Passed")]
+        LastActivityPassed,
+        [EnumValueDescription("Last Activity Failed")]
+        LastActivityFailed,
+        [EnumValueDescription("Custom Condition")]
         CSharp,
+        [EnumValueDescription("Legacy Custom Condition")]
+        Legacy,
+        [EnumValueDescription("Business Flow Passed")]
+        BusinessFlowPassed,
+        [EnumValueDescription("Business Flow Failed")]
+        BusinessFlowFailed,
+
     }
 
     public class FlowControl : RepositoryItemBase
-    {        
+    {
+        public static readonly List<object> BusinessFlowFlowControls = new List<object> { eFCOperator.BusinessFlowPassed,eFCOperator.BusinessFlowFailed,eFCOperator.CSharp,eFCOperator.Legacy };
+        public static readonly List<object> ActionFlowControls = new List<object> { eFCOperator.ActionPassed, eFCOperator.ActionFailed,eFCOperator.LastActivityPassed,eFCOperator.LastActivityFailed, eFCOperator.CSharp, eFCOperator.Legacy };
         public  static partial class Fields
         {
             public static string Active = "Active";
@@ -183,6 +199,10 @@ namespace GingerCore.FlowControlLib
             set
             {
                 mOperator = value;
+                if(!(mOperator.Value==eFCOperator.Legacy||mOperator.Value==eFCOperator.CSharp))
+                {
+                    Condition = string.Empty;
+                }
             }
         }
 

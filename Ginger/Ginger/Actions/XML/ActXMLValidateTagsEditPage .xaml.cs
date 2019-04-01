@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -40,9 +40,9 @@ namespace Ginger.Actions.XML
             this.mAct = (ActXMLTagValidation)act;
 
             //// Bind Controls
-            App.ObjFieldBinding(XMLFileTextBox , TextBox.TextProperty, mAct.InputFile , ActInputValue.Fields.Value);
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(XMLFileTextBox , TextBox.TextProperty, mAct.InputFile , ActInputValue.Fields.Value);
       
-            App.ObjFieldBinding(ReqisFromFile, CheckBox.IsCheckedProperty, mAct, "ReqisFromFile");
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(ReqisFromFile, CheckBox.IsCheckedProperty, mAct, "ReqisFromFile");
 
             xDocumentTypeComboBox.Init(mAct, ActXMLTagValidation.Fields.DocumentType, typeof(ActXMLTagValidation.eDocumentType));
      
@@ -86,15 +86,15 @@ namespace Ginger.Actions.XML
             if (mAct.DocumentType == ActXMLTagValidation.eDocumentType.XML)
             {
                 dlg.DefaultExt = "*.xml";
-                dlg.Filter = "XML Template File (*.xml)|*.xml "+"|All Files(*.*)| *.* ";
+                dlg.Filter = "XML Template File (*.xml)|*.xml|All Files (*.*)|*.*";
             }
             else if (mAct.DocumentType == ActXMLTagValidation.eDocumentType.JSON)
             {
                 dlg.DefaultExt = "*.json";
-                dlg.Filter = "JSON Template File (*.json)|*.json" + "|All Files(*.*)| *.* ";
+                dlg.Filter = "JSON Template File (*.json)|*.json|All Files (*.*)|*.*";
             }
 
-            string SolutionFolder =  WorkSpace.UserProfile.Solution.Folder.ToUpper();
+            string SolutionFolder =  WorkSpace.Instance.Solution.Folder.ToUpper();
 
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {

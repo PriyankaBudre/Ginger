@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -35,8 +35,8 @@ namespace Ginger.Actions
             this.f = Act;
            
             //TODO: fix hard coded ButtonAction use Fields - changed 
-            App.ObjFieldBinding(ScreenAreaCoordinatesTextBox, TextBox.TextProperty, Act, ActCompareImgs.Fields.Coordinates, BindingMode.OneWay);
-            App.ObjFieldBinding(ExpectedImageTextBox, TextBox.TextProperty, Act, ActCompareImgs.Fields.ExpectedImgFile, BindingMode.OneWay);
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(ScreenAreaCoordinatesTextBox, TextBox.TextProperty, Act, ActCompareImgs.Fields.Coordinates, BindingMode.OneWay);
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(ExpectedImageTextBox, TextBox.TextProperty, Act, ActCompareImgs.Fields.ExpectedImgFile, BindingMode.OneWay);
             WindowNameTextBox.Init(Context.GetAsContext(Act.Context), Act.GetOrCreateInputParam(ActCompareImgs.Fields.WindowName), true, false, UCValueExpression.eBrowserType.Folder);
         }
 

@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -129,7 +129,8 @@ namespace GingerCore.Actions
             }
 
             newAct.ElementLocateBy = (eLocateBy)((int)this.LocateBy);
-            newAct.ElementLocateValue = String.Copy(this.LocateValue);
+            if (!string.IsNullOrEmpty(this.LocateValue))
+                newAct.ElementLocateValue = String.Copy(this.LocateValue);
             if (!uIElementTypeAssigned)
                 newAct.ElementType = eElementType.Button;
             newAct.Active = true;

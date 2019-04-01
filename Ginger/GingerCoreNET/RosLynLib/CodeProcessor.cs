@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -59,19 +59,20 @@ namespace GingerCoreNET.RosLynLib
             SO.WithReferences(Assembly.GetAssembly(typeof(string)));
 
 
+            string pattern = "^[^{}]*" +
+                       "(" +
+                       "((?'Open'{)[^{}]*)+" +
+                       "((?'Close-Open'})[^{}]*)+" +
+                       ")*" +
+                       "(?(Open)(?!))";
+             pattern = "{CS({.*}|[^{}]*)*}";
 
 
+            Pattern =   new Regex(pattern);
             Regex Clean =new  Regex("{CS(\\s)*Exp(\\s)*=");
 
-            string pattern = @"{CS(\s)*Exp(\s)*=(\s)*(({([^{])*})*|[^{}]*)*}";
-            string input = @"{CS Exp = DateTime.Now}{CS Exp =  DateTime.Now}";
-            RegexOptions options = RegexOptions.Multiline;
-
-          
-        
-            foreach (Match M in Regex.Matches(Expression, pattern, options))
+            foreach (Match M in Pattern.Matches(Expression))
             {
-            
                 string match = M.Value;
                 string exp = match;
                 exp = exp.Replace(Clean.Match(exp).Value, "");

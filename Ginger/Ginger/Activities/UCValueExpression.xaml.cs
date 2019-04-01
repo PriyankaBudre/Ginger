@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ namespace Ginger.Activities
             this.obj = obj;
             this.AttrName = AttrName;
             mContext = context;
-            GingerCore.General.ObjFieldBinding(ValueTextBox, TextBox.TextProperty, obj, AttrName);       
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(ValueTextBox, TextBox.TextProperty, obj, AttrName);       
         }
 
         public void Init(Context context, object obj, string AttrName, bool isVENeeded = true, bool isBrowseNeeded = false, eBrowserType browserType = eBrowserType.File, string fileType = "*", RoutedEventHandler extraBrowserSelectionHandler = null)
@@ -66,7 +66,7 @@ namespace Ginger.Activities
             this.obj = obj;
             this.AttrName = AttrName;
             mContext = context;
-            GingerCore.General.ObjFieldBinding(ValueTextBox, TextBox.TextProperty, obj, AttrName);
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(ValueTextBox, TextBox.TextProperty, obj, AttrName);
 
             if (isBrowseNeeded)
             {

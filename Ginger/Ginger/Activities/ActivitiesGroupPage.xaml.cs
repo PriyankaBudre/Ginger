@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -60,9 +60,9 @@ namespace Ginger.Activities
             mActivitiesGroup.SaveBackup();
             mBusinessFlow = parentBusinessFlow;
 
-            App.ObjFieldBinding(txtGroupName, TextBox.TextProperty, mActivitiesGroup, ActivitiesGroup.Fields.Name);
-            App.ObjFieldBinding(txtGroupDescription, TextBox.TextProperty, mActivitiesGroup, ActivitiesGroup.Fields.Description);
-            App.ObjFieldBinding(txtAutoPrecentage, TextBox.TextProperty, mActivitiesGroup, ActivitiesGroup.Fields.AutomationPrecentage, BindingMode.OneWay);
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(txtGroupName, TextBox.TextProperty, mActivitiesGroup, ActivitiesGroup.Fields.Name);
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(txtGroupDescription, TextBox.TextProperty, mActivitiesGroup, ActivitiesGroup.Fields.Description);
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(txtAutoPrecentage, TextBox.TextProperty, mActivitiesGroup, ActivitiesGroup.Fields.AutomationPrecentage, BindingMode.OneWay);
 
             SetGroupedActivitiesGridView();
             grdGroupedActivities.DataSourceList = mActivitiesGroup.ActivitiesIdentifiers;

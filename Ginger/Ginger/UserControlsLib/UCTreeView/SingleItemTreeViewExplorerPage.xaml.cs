@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ namespace GingerWPF.UserControlsLib
                 DetailsFrame.Content = ((ITreeViewItem)tvItem).EditPage();
                 if(tvItem is NewTreeViewItemBase)
                 {
-                    ((NewTreeViewItemBase)tvItem).PrepareItemForEdit();
+                    ((NewTreeViewItemBase)tvItem).PrepareItemForEdit();                    
                 }                
             }
             else
@@ -77,5 +77,6 @@ namespace GingerWPF.UserControlsLib
                 DetailsFrame.Content = "View/Edit page is not available yet for the tree item '" + tvItem.GetType().Name + "'";
             }
         }
+       
     }
 }

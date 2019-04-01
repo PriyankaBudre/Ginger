@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -37,10 +37,10 @@ namespace Ginger.Run.RunSetActions
 
             mRunSetActionScript = TestNGReport;
 
-            App.ObjFieldBinding(TargetTestNGReportFolderBox, TextBox.TextProperty, mRunSetActionScript, nameof(RunSetActionGenerateTestNGReport.SaveResultsInSolutionFolderName));
-            App.ObjFieldBinding(sourceActivityRadioBtn, RadioButton.IsCheckedProperty, mRunSetActionScript, nameof(RunSetActionGenerateTestNGReport.IsStatusByActivity));
-            App.ObjFieldBinding(sourceActivitiesRadioBtn, RadioButton.IsCheckedProperty, mRunSetActionScript, nameof(RunSetActionGenerateTestNGReport.IsStatusByActivitiesGroup));
-            App.ObjFieldBinding(xUseDynamicParameters, CheckBox.IsCheckedProperty, mRunSetActionScript,nameof(RunSetActionGenerateTestNGReport.ConfiguerDynamicParameters));
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(TargetTestNGReportFolderBox, TextBox.TextProperty, mRunSetActionScript, nameof(RunSetActionGenerateTestNGReport.SaveResultsInSolutionFolderName));
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(sourceActivityRadioBtn, RadioButton.IsCheckedProperty, mRunSetActionScript, nameof(RunSetActionGenerateTestNGReport.IsStatusByActivity));
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(sourceActivitiesRadioBtn, RadioButton.IsCheckedProperty, mRunSetActionScript, nameof(RunSetActionGenerateTestNGReport.IsStatusByActivitiesGroup));
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(xUseDynamicParameters, CheckBox.IsCheckedProperty, mRunSetActionScript,nameof(RunSetActionGenerateTestNGReport.ConfiguerDynamicParameters));
 
             SetParametersGridView();
             grdTestNGReportParameters.btnAdd.AddHandler(Button.ClickEvent, new RoutedEventHandler(AddButton));
@@ -70,7 +70,7 @@ namespace Ginger.Run.RunSetActions
         {
             GridViewDef defView = new GridViewDef(GridViewDef.DefaultViewName);
             defView.GridColsView = new ObservableList<GridColView>();
-            defView.GridColsView.Add(new GridColView() { Field = ActInputValue.Fields.Param, Header = "Paramater Name", WidthWeight = 40 });
+            defView.GridColsView.Add(new GridColView() { Field = ActInputValue.Fields.Param, Header = "Parameter Name", WidthWeight = 40 });
             defView.GridColsView.Add(new GridColView() { Field = ActInputValue.Fields.Value, Header = "Parameter Value", WidthWeight = 40 });
             defView.GridColsView.Add(new GridColView() { Field = "...", WidthWeight = 5, MaxWidth = 35, StyleType = GridColView.eGridColStyleType.Template, CellTemplate = (DataTemplate)this.pageGrid.Resources["ParamValueExpressionButton"] });
 

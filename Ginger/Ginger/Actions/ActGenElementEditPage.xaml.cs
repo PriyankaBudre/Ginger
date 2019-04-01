@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ namespace Ginger.Actions
 
             this.mAct = Act;
 
-            App.FillComboFromEnumVal(ActionNameComboBox, Act.GenElementAction);                     
-            App.ObjFieldBinding(ActionNameComboBox, ComboBox.SelectedValueProperty, Act, "GenElementAction"); 
+            GingerCore.General.FillComboFromEnumObj(ActionNameComboBox, Act.GenElementAction);                     
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(ActionNameComboBox, ComboBox.SelectedValueProperty, Act, "GenElementAction"); 
 
             Xoffset.Init(Context.GetAsContext(mAct.Context), mAct.GetOrCreateInputParam(ActGenElement.Fields.Xoffset), true);
             Yoffset.Init(Context.GetAsContext(mAct.Context), mAct.GetOrCreateInputParam(ActGenElement.Fields.Yoffset), true);

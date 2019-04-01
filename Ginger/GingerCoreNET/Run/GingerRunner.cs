@@ -1,6 +1,6 @@
 ﻿#region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ using Amdocs.Ginger.Common.Repository;
 using Amdocs.Ginger.Common.Repository.TargetLib;
 using Amdocs.Ginger.Common.UIElement;
 using Amdocs.Ginger.CoreNET.Execution;
-using Amdocs.Ginger.CoreNET.Run.RunListenerLib;
 using Amdocs.Ginger.Repository;
 using Amdocs.Ginger.Run;
 using GingerCore;
@@ -287,6 +286,7 @@ namespace Ginger.Run
             set
             {
                 mProjEnvironment = (ProjEnvironment)value;
+                ExecutionLogger.ExecutionEnvironment = (ProjEnvironment)value;
                 NotifyEnvironmentChanged();                
             }
         }
@@ -560,7 +560,7 @@ namespace Ginger.Run
 
                     if (doContinueRun == false)
                     {
-                        // ExecutionLogger.GingerEnd();
+                        // ExecutionLogger.GingerEnd();                    
                         NotifyRunnerRunEnd(CurrentBusinessFlow.ExecutionFullLogFolder);
                     }
                 }   
@@ -1396,6 +1396,7 @@ namespace Ginger.Run
             if (mStopRun)
             {
                 UpdateActionStatus(action, Amdocs.Ginger.CoreNET.Execution.eRunStatus.Stopped, st);
+                ExecutionLogger.SetActionFolder(action);
                 //To Handle Scenario which the Driver is still searching the element until Implicit wait will be done, lates being used on SeleniumDriver.Isrunning method 
                 SetDriverPreviousRunStoppedFlag(true);
                 return;
@@ -1417,7 +1418,7 @@ namespace Ginger.Run
                 if (typeof(ActPlugIn).IsAssignableFrom(action.GetType()))
                 {
                     ActExecutorType = eActionExecutorType.RunOnPlugIn;
-
+                    
                     
                 }
                 else if (typeof(ActWithoutDriver).IsAssignableFrom(action.GetType()))
@@ -2165,7 +2166,10 @@ namespace Ginger.Run
                 if (AP.ParamType == typeof(string))
                 {
                     p.AddValue(AP.ValueForDriver.ToString());
-
+                }
+                else if (AP.ParamType == typeof(int))
+                {
+                    p.AddValue(AP.IntValue);
                 }
                 else if (AP.ParamType == typeof(bool))
                 {
@@ -2181,7 +2185,7 @@ namespace Ginger.Run
                 }
                 else
                 {
-                    throw new Exception("Unknown param typee to pack: " + AP.ParamType.FullName);
+                    throw new Exception("Unknown param type to pack: " + AP.ParamType.FullName);
                 }
                 p.ClosePackage();
                 Params.Add(p);
@@ -2241,7 +2245,7 @@ namespace Ginger.Run
 
                 
 
-                    bool IsConditionTrue= CalculateFlowControlStatus(FC.ConditionCalculated,FC.Operator);
+                    bool IsConditionTrue= CalculateFlowControlStatus(act, mLastExecutedActivity,CurrentBusinessFlow, FC.Operator,FC.ConditionCalculated);
                  
                     if (IsConditionTrue)
                     {
@@ -2391,27 +2395,69 @@ namespace Ginger.Run
             }
         }
 
-        private bool CalculateFlowControlStatus(string Expression, GingerCore.FlowControlLib.eFCOperator FCoperator)
+        public static bool CalculateFlowControlStatus(Act mAct,Activity mLastActivity,BusinessFlow CurrentBF,eFCOperator FCoperator,string Expression)
         {
             bool FCStatus;
-            if (FCoperator == GingerCore.FlowControlLib.eFCOperator.Legacy)
+            switch (FCoperator)
             {
-                string rc = VBS.ExecuteVBSEval(Expression.Trim());
-                if (rc == "-1")
-                {
+                case eFCOperator.Legacy:
+                    string rc = VBS.ExecuteVBSEval(Expression.Trim());
+                    if (rc == "-1")
+                    {
+                        FCStatus = true;
+                    }
+                    else
+                    {
 
-                    FCStatus = true;
-                }
-                else
-                {
+                        FCStatus = false;
+                    }
+                    break;
 
+                case eFCOperator.ActionPassed:
+                    FCStatus = mAct.Status.Value == eRunStatus.Passed ? true : false;
+                    break;
+
+                case eFCOperator.ActionFailed:
+                    FCStatus = mAct.Status.Value == eRunStatus.Failed ? true : false;
+                    break;
+
+                case eFCOperator.LastActivityPassed:
+                    if (mLastActivity != null)
+                    {
+                        FCStatus = mLastActivity.Status == eRunStatus.Passed ? true : false;
+                    }
+                    else
+                    {
+                        FCStatus = false;
+                    }
+                    break;
+
+                case eFCOperator.LastActivityFailed:
+                    if (mLastActivity != null)
+                    {
+                        FCStatus = mLastActivity.Status == eRunStatus.Failed ? true : false;
+                    }
+                    else
+                    {
+                        FCStatus = false;
+                    }
+                    break;
+
+                case eFCOperator.BusinessFlowPassed:
+                    FCStatus = CurrentBF.RunStatus == eRunStatus.Passed ? true : false;
+                    break;
+
+                case eFCOperator.BusinessFlowFailed:
+                    FCStatus = CurrentBF.RunStatus == eRunStatus.Failed ? true : false;
+                    break;
+
+                case eFCOperator.CSharp:
+                    FCStatus = CodeProcessor.EvalCondition(Expression);
+                    break;
+
+                default:
                     FCStatus = false;
-                }
-
-            }
-            else
-            {
-                FCStatus = CodeProcessor.EvalCondition(Expression);
+                    break;
             }
 
             return FCStatus;
@@ -3882,7 +3928,7 @@ namespace Ginger.Run
             if(CurrentBusinessFlow != null)
             {
                 mExecutedActivityWhenStopped = (Activity)CurrentBusinessFlow.CurrentActivity;
-                mExecutedActionWhenStopped = (Act)CurrentBusinessFlow.CurrentActivity.Acts.CurrentItem;
+                mExecutedActionWhenStopped = (Act)CurrentBusinessFlow.CurrentActivity?.Acts.CurrentItem;
                 mExecutedBusinessFlowWhenStopped = (BusinessFlow)CurrentBusinessFlow;
             }            
         }
@@ -3897,10 +3943,8 @@ namespace Ginger.Run
             {
                 foreach (BusinessFlow businessFlow in BusinessFlows)
                 {
-                    businessFlow.Reset();
-
-                   
-                    NotifyBusinessflowWasReset(CurrentBusinessFlow);
+                    businessFlow.Reset();                   
+                    NotifyBusinessflowWasReset(businessFlow);
                 }
             }
         }
@@ -3992,9 +4036,9 @@ namespace Ginger.Run
             }
             else if (CurrentBusinessFlow != null) // Automate Tab
             {
-                foreach (TargetApplication TA in CurrentBusinessFlow.TargetApplications)
+                foreach (TargetBase TA in CurrentBusinessFlow.TargetApplications)
                 {
-                    if (bfsTargetApplications.Where(x => x.Name == TA.AppName).FirstOrDefault() == null)
+                    if (bfsTargetApplications.Where(x => x.Name == TA.Name).FirstOrDefault() == null)
                         bfsTargetApplications.Add(TA);
                 }
             }
@@ -4196,26 +4240,26 @@ namespace Ginger.Run
 
                 FC.CalcualtedValue(CurrentBusinessFlow, (ProjEnvironment)ProjEnvironment, this.DSList);
 
-                string rc = VBS.ExecuteVBSEval(FC.ConditionCalculated.Trim());
+                //string rc = VBS.ExecuteVBSEval(FC.ConditionCalculated.Trim());
 
-                bool IsConditionTrue;
-                if (rc == "-1")
-                {
-                    FC.ConditionCalculated += " is True";
-                    IsConditionTrue = true;
-                }
-                else
-                {
-                    FC.ConditionCalculated += " is False";
-                    IsConditionTrue = false;
-                }
+                //bool IsConditionTrue;
+                //if (rc == "-1")
+                //{
+                //    FC.ConditionCalculated += " is True";
+                //    IsConditionTrue = true;
+                //}
+                //else
+                //{
+                //    FC.ConditionCalculated += " is False";
+                //    IsConditionTrue = false;
+                //}
+                bool IsConditionTrue = CalculateFlowControlStatus(null, mLastExecutedActivity, CurrentBusinessFlow, FC.Operator, FC.ConditionCalculated);
 
                 if (IsConditionTrue)
                 {
                     //Perform the action as condition is true
                     switch (FC.BusinessFlowControlAction)
                     {
-
                         case eBusinessFlowControlAction.GoToBusinessFlow:
                             if (GotoBusinessFlow(FC, bf, ref fcReturnIndex))
                             {

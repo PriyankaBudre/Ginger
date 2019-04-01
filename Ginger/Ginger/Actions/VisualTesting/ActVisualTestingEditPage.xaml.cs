@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -287,7 +287,7 @@ namespace Ginger.Actions.VisualTesting
 
         private IVisualTestingDriver GetVisualTestingDriver()
         {
-            App.AutomateTabGingerRunner.SetCurrentActivityAgent();
+            Context.GetAsContext(mAct.Context).Runner.SetCurrentActivityAgent();
             Agent a = (Agent)(Context.GetAsContext(mAct.Context)).BusinessFlow.CurrentActivity.CurrentAgent;
 
             if (a.Driver is IVisualTestingDriver)

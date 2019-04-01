@@ -1,6 +1,6 @@
 ﻿#region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -16,16 +16,12 @@ limitations under the License.
 */
 #endregion
 
-using amdocs.ginger.GingerCoreNET;
 using Amdocs.Ginger;
 using Amdocs.Ginger.Common;
 using Amdocs.Ginger.Common.Repository;
-using Amdocs.Ginger.CoreNET;
 using Amdocs.Ginger.Repository;
 using Amdocs.Ginger.Utils;
-
 using Ginger.Reports;
-using Ginger.Run;
 using GingerCore;
 using GingerCore.Platforms;
 using GingerCore.Variables;
@@ -287,6 +283,8 @@ namespace Ginger.SolutionGeneral
         public string ALMProject { get; set; }
         [IsSerializedForLocalRepository]
         public string ALMProjectKey { get; set; }
+        [IsSerializedForLocalRepository]
+        public string ConfigPackageFolderPath { get; set; }
         public void SetReportsConfigurations()
         {
             try {
@@ -306,6 +304,7 @@ namespace Ginger.SolutionGeneral
                     this.HTMLReportsConfigurationSetList = new ObservableList<HTMLReportsConfiguration>();
                     HTMLReportsConfiguration HTMLReportsConfiguration = new HTMLReportsConfiguration();
                     HTMLReportsConfiguration.IsSelected = true;
+                    HTMLReportsConfiguration.HTMLReportTemplatesSeq = 1;
                     HTMLReportsConfiguration.HTMLReportsFolder = @"~\HTMLReports\";
                     HTMLReportsConfiguration.HTMLReportsAutomaticProdIsEnabled = false;
                     HTMLReportsConfigurationSetList.Add(HTMLReportsConfiguration);

@@ -1,6 +1,6 @@
 ﻿#region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -332,6 +332,24 @@ namespace Amdocs.Ginger.Repository
         {
             SolutionRepositoryItemInfo<T> SRII = GetSolutionRepositoryItemInfo<T>();
             return SRII.GetAllItemsCache();
+        }
+
+        /// <summary>
+        /// Get first cached Repository Item from provided Repository Item Type (if list is empty then null will be returned)
+        /// </summary>
+        /// <typeparam name="T">Repository Item Type</typeparam>
+        /// <returns></returns>
+        public dynamic GetFirstRepositoryItem<T>()
+        {
+            SolutionRepositoryItemInfo<T> SRII = GetSolutionRepositoryItemInfo<T>();
+            if (SRII.GetAllItemsCache().Count > 0)
+            {
+                return (SRII.GetAllItemsCache()[0]);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>

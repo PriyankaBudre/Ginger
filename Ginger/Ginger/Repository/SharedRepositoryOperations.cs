@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -164,11 +164,11 @@ namespace Ginger.Repository
 
                                 }
 
-                                selectedItem.Comment = "Missing variables added to activity.";
+                                selectedItem.Comment = "Missing " + GingerDicser.GetTermResValue(eTermResKey.Variable) + " added to " + GingerDicser.GetTermResValue(eTermResKey.Activity);
                             }
                             else
                             {
-                                selectedItem.Comment = "Uploaded without adding missing variables";
+                                selectedItem.Comment = "Uploaded without adding missing " + GingerDicser.GetTermResValue(eTermResKey.Variables);
                             }
                             break;
 

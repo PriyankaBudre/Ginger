@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -36,19 +36,34 @@ namespace GingerWPF.UserControlsLib.UCTreeView
     /// </summary>
     public partial class TreeView1 : UserControl, ITreeView
     {
+        public event EventHandler SearchStarted;
+
+        public event EventHandler SearchCancelled;
+        public event EventHandler SearchCompleted;
 
         private Task mSearchTask = null;
         private CancellationTokenSource mCancellationTokenSource = null;
         private string mSearchString;
 
-        public UCTreeView Tree => xTreeViewTree;
+        public UCTreeView Tree
+        {
+            get
+            {
+                return xTreeViewTree;
+            }
+        }
+
+        public Grid TreeGrid
+        {
+            get { return xGrid; }
+        }
 
         public string TreeTitle
         {
             get { return xTreeTitle.Content.ToString(); }
             set { xTreeTitle.Content = value; }
         }
-
+       
         public eImageType TreeIcon
         {
             get { return xTreeIcon.ImageType; }
@@ -79,6 +94,20 @@ namespace GingerWPF.UserControlsLib.UCTreeView
 
             xTreeViewTree.ItemSelected += xTreeViewTree_ItemSelected;
             xTreeViewTree.ItemAdded += XTreeViewTree_ItemAdded;
+        }
+
+
+        public bool IsSearchRunning()
+        {
+            if(mSearchTask==null)
+            {
+                return false;
+            }    
+            else if (mSearchTask.IsCompleted == false && mSearchTask.IsCanceled == false)
+            {
+                return true;
+            }
+            return false;
         }
 
         private void XTreeViewTree_ItemAdded(object sender, EventArgs e)
@@ -119,7 +148,17 @@ namespace GingerWPF.UserControlsLib.UCTreeView
                 xTreeViewTree.CurrentSelectedTreeViewItem.SetTools(this);
             }
         }
-       
+        
+        public void SetTitleSection(double margin, double GridLength, double TitleFontSize, FontWeight TitleFontWeight)
+        {
+            xTreeItemHeaderPnl.Margin = new Thickness(margin);
+            xTreeTitle.FontSize = TitleFontSize;
+            xTreeTitle.FontWeight = TitleFontWeight;
+            xTitleSection.HorizontalAlignment = HorizontalAlignment.Center;
+            TreeGrid.RowDefinitions[0].Height = new GridLength(GridLength);
+            xTreeActionsIconsPnl.Visibility = Visibility.Collapsed;
+        }
+
         private async void xSearchTextBox_TextChangedAsync(object sender, TextChangedEventArgs e)
         {
             if (string.IsNullOrEmpty(xSearchTextBox.Text))
@@ -155,9 +194,9 @@ namespace GingerWPF.UserControlsLib.UCTreeView
             {
                 //if search is already complete and user trying to clear text we collapse the unselected nodes
                 List<TreeViewItem> pathNodes = new List<TreeViewItem>();
-                if (xTreeViewTree.MlastSelectedTVI != null)
+                if (xTreeViewTree.LastSelectedTVI != null)
                 {
-                    pathNodes = UCTreeView.getSelecetdItemPathNodes(xTreeViewTree.MlastSelectedTVI);
+                    pathNodes = UCTreeView.getSelecetdItemPathNodes(xTreeViewTree.LastSelectedTVI);
                 }
                 UCTreeView.CollapseUnselectedTreeNodes(xTreeViewTree.TreeItemsCollection, pathNodes);
             }
@@ -217,7 +256,18 @@ namespace GingerWPF.UserControlsLib.UCTreeView
                     try
                     {
                         mCancellationTokenSource.Token.ThrowIfCancellationRequested();
-                        Reporter.ToStatus(eStatusMsgKey.Search, null, ": " + mSearchString);
+
+                        if(SearchStarted==null)
+                        {
+                            //If event is not hooked we say searching status on main window
+                            Reporter.ToStatus(eStatusMsgKey.Search, null, ": " + mSearchString);                           
+                        }
+                        else
+                        {
+                            //If event is hookded then no point in showing status on main window. 
+                            //child window need to handle it in the window. E.g. Windows Explorer
+                            SearchStarted.Invoke(Tree, new EventArgs());
+                        }
                         Mouse.OverrideCursor = Cursors.Wait;
                         xTreeViewTree.FilterItemsByText(xTreeViewTree.TreeItemsCollection, mSearchString, mCancellationTokenSource.Token);
                     }
@@ -227,7 +277,16 @@ namespace GingerWPF.UserControlsLib.UCTreeView
                     }
                     finally
                     {
-                        Reporter.HideStatusMessage();
+                        
+                        if (SearchStarted == null)
+                        {
+                            Reporter.HideStatusMessage();
+                        }
+                        else
+                        {
+                            SearchCompleted.Invoke(Tree, new EventArgs());
+                        }
+                           
                         Mouse.OverrideCursor = null;
                         mCancellationTokenSource.Dispose();
                     }
@@ -238,7 +297,7 @@ namespace GingerWPF.UserControlsLib.UCTreeView
 
         }
 
-        private async Task CancelSearchAsync()
+        public async Task CancelSearchAsync()
         {
 
             mCancellationTokenSource?.Cancel();
@@ -254,9 +313,15 @@ namespace GingerWPF.UserControlsLib.UCTreeView
             }
 
             mCancellationTokenSource?.Dispose();
-            mSearchTask = null;
-
-            Reporter.HideStatusMessage();
+            mSearchTask = null;   
+            if (SearchCancelled == null)
+            {
+                SearchCancelled.Invoke(Tree, new EventArgs());
+            }
+            else
+            {
+                Reporter.HideStatusMessage();
+            }
             Mouse.OverrideCursor = null;
         }
     }

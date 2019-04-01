@@ -1,6 +1,6 @@
 #region License
 /*
-Copyright © 2014-2018 European Support Limited
+Copyright © 2014-2019 European Support Limited
 
 Licensed under the Apache License, Version 2.0 (the "License")
 you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ namespace Ginger.Actions
             InitializeComponent();
             mAct = act;
             SetComboListsValues(); 
-            App.ObjFieldBinding(VariableNameComboBox, ComboBox.TextProperty, mAct, "VariableName");                  
+            GingerCore.GeneralLib.BindingHandler.ObjFieldBinding(VariableNameComboBox, ComboBox.TextProperty, mAct, "VariableName");                  
         }
 
         private void SetComboListsValues()
@@ -49,7 +49,7 @@ namespace Ginger.Actions
             }
             else
             {
-                mVars = WorkSpace.UserProfile.Solution.Variables;
+                mVars = WorkSpace.Instance.Solution.Variables;
             }
          
             foreach (VariableBase v in mVars.OrderBy(nameof(VariableBase.Name)))
