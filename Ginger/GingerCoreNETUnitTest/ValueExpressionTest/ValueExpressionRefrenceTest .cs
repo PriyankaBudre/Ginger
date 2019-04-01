@@ -68,7 +68,7 @@ namespace GingerCoreNETUnitTests.ValueExpressionTest
             string Expression = string.Empty;
 
             string Expected = string.Empty;
-            foreach (ValueExpressionReference ver in WorkSpace.VERefrences.Refrences.Where(x => x.Expression.StartsWith(@"{CS") && x.ExpressionResult != null))
+            foreach (ValueExpressionReference ver in WorkSpace.Instance.VERefrences.Refrences.Where(x => x.Expression.StartsWith(@"{CS") && x.ExpressionResult != null))
             {
 
                 Expression = Expression + "|" + ver.Expression;

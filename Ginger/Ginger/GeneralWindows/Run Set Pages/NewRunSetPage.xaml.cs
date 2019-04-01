@@ -1498,7 +1498,8 @@ namespace Ginger.Run
                     var HTMLReportConfigurations = WorkSpace.Instance.SolutionRepository.GetAllRepositoryItems<HTMLReportConfiguration>();
                     HTMLReportConfiguration selectedHTMLReportConfiguration = HTMLReportConfigurations.Where(x => (x.IsDefault == true)).FirstOrDefault();
 
-                    string runSetFolder = App.RunsetExecutor.RunSetConfig.LastRunsetLoggerFolder;
+                    string runSetFolder = WorkSpace.Instance.RunsetExecutor.RunSetConfig.LastRunsetLoggerFolder;
+
                     ReportInfo RI = new ReportInfo(runSetFolder);
                     string hTMLOutputFolder = Ginger.Reports.GingerExecutionReport.ExtensionMethods.GetReportDirectory(currentConf.HTMLReportsFolder + Path.DirectorySeparatorChar + System.IO.Path.GetFileName(((RunSetReport)RI.ReportInfoRootObject).LogFolder));
        

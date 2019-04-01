@@ -103,9 +103,9 @@ namespace GingerWeb.Controllers
             {
                 Directory.Delete(hTMLOutputFolder, true);
             }
-            Directory.CreateDirectory(hTMLOutputFolder);                        
+            Directory.CreateDirectory(hTMLOutputFolder);
 
-            HTMLReportConfiguration config = HTMLReportConfiguration.SetHTMLReportConfigurationWithDefaultValues("DefaultTemplate", true);
+            HTMLReportConfiguration config = new HTMLReportConfiguration();
             string report = Ginger.Reports.GingerExecutionReport.ExtensionMethods.CreateGingerExecutionReportByReportInfoLevel(RI, config, templatesFolder, hTMLOutputFolder);
 
 

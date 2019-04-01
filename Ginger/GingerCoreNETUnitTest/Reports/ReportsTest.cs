@@ -65,7 +65,7 @@ namespace Ginger.Reports.Tests
             string BusinessFlowReportFolder = GingerTestHelper.TestResources.GetTestResourcesFolder(@"Reports" + Path.DirectorySeparatorChar + "AutomationTab_LastExecution" + Path.DirectorySeparatorChar);
             ReportInfo RI = new ReportInfo(BusinessFlowReportFolder);
             string templatesFolder = Path.Combine(Amdocs.Ginger.Common.GeneralLib.General.GetExecutingDirectory(), "Reports", "GingerExecutionReport");
-            HTMLReportConfiguration selectedHTMLReportConfiguration = HTMLReportConfiguration.SetHTMLReportConfigurationWithDefaultValues("DefaultTemplate", true);
+            HTMLReportConfiguration selectedHTMLReportConfiguration =new HTMLReportConfiguration();
 
             mOutputFolderPath = TestResources.GetTempFolder("HTMLReports") + Path.DirectorySeparatorChar;
             mTestResourcesPath = TestResources.GetTestResourcesFolder(Path.Combine("Reports", "HTMLReports"));

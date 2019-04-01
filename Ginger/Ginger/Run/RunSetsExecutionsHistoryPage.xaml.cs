@@ -253,7 +253,7 @@ namespace Ginger.Run
         private void ReportBtnClicked(object sender, RoutedEventArgs e)
         {
 
-            HTMLReportsConfiguration currentConf = WorkSpace.UserProfile.Solution.HTMLReportsConfigurationSetList.Where(x => (x.IsSelected == true)).FirstOrDefault();
+            HTMLReportsConfiguration currentConf = WorkSpace.Instance.Solution.HTMLReportsConfigurationSetList.Where(x => (x.IsSelected == true)).FirstOrDefault();
 
             if (grdExecutionsHistory.CurrentItem == null)
             {
