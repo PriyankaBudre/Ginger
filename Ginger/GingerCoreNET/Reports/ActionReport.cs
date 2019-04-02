@@ -237,7 +237,7 @@ namespace Ginger.Reports
             {
                 if (outputValues == null)
                 {
-                    outputValues = mAction.ReturnValues.Select(a => a.Param + "_:_" + a.Actual + "_:_" + a.ExpectedCalculated + "_:_" + a.Status).ToList();
+                    outputValues = mAction.ReturnValues.Select(a => a.Param + "_:_" + a.Path + "_:_" + a.Actual + "_:_" + a.ExpectedCalculated  + "_:_" + a.Status).ToList();
                 }
                 return outputValues;
             }
@@ -257,6 +257,8 @@ namespace Ginger.Reports
                 DataTable dt = new DataTable();
                 dt.Columns.Add("ParameterName");
                 dt.Columns["ParameterName"].Caption = "Parameter Name";
+                dt.Columns.Add("Path");
+                dt.Columns["Path"].Caption = "Path";
                 dt.Columns.Add("ActualValue");
                 dt.Columns["ActualValue"].Caption = "Actual Value";
                 dt.Columns.Add("ExpectedValue");
@@ -266,12 +268,14 @@ namespace Ginger.Reports
 
                 foreach (string outputValues in OutputValues)
                 {
+                    int fld = 0;
                     String[] elementsAfter = outputValues.Split(new string[] { "_:_" }, StringSplitOptions.None);
                     DataRow dr = dt.NewRow();
-                    dr["ParameterName"] = elementsAfter[0];
-                    dr["ActualValue"] = elementsAfter[1];                    
-                    dr["ExpectedValue"] = elementsAfter[2];
-                    dr["Status"] = elementsAfter[3];
+                    dr["ParameterName"] = elementsAfter[fld++];
+                    dr["Path"] = elementsAfter[fld++];
+                    dr["ActualValue"] = elementsAfter[fld++];
+                    dr["ExpectedValue"] = elementsAfter[fld++];
+                    dr["Status"] = elementsAfter[fld++];
                     dt.Rows.Add(dr);
                 }
                 return dt;
