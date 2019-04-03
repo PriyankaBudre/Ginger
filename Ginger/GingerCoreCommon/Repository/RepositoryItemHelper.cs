@@ -19,12 +19,15 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Amdocs.Ginger.Common.InterfacesLib;
 
 namespace Amdocs.Ginger.Common
 {
     public class RepositoryItemHelper
     {
         public static IRepositoryItemFactory RepositoryItemFactory { get; set; }
+
+        public static IValueExpressionHelper ValueExpressionHelper { get; set; }
 
     }
 }

@@ -74,27 +74,6 @@ namespace Ginger.Repository
         {
         }
 
-        public IValueExpression CreateValueExpression(ProjEnvironment mProjEnvironment, BusinessFlow mBusinessFlow)
-        {
-            return new ValueExpression(mProjEnvironment, mBusinessFlow);
-        }
-
-        public IValueExpression CreateValueExpression(ProjEnvironment mProjEnvironment, BusinessFlow mBusinessFlow, object DSList)
-        {
-            return new ValueExpression(mProjEnvironment, mBusinessFlow, (ObservableList<GingerCore.DataSource.DataSourceBase>)DSList);
-        }
-
-        public IValueExpression CreateValueExpression(ProjEnvironment Env, BusinessFlow BF, ObservableList<DataSourceBase> DSList = null, bool bUpdate = false, string UpdateValue = "", bool bDone = true)
-        {
-            return new ValueExpression(Env, BF, (ObservableList<GingerCore.DataSource.DataSourceBase>)DSList, bUpdate, UpdateValue, bDone);            
-        }
-
-        public IValueExpression CreateValueExpression(object obj, string attr)
-        {
-            return new ValueExpression(obj, attr);
-        }
-
-
  
         //public ObservableList<IDatabase> GetDatabaseList()
         //{

@@ -47,6 +47,8 @@ namespace amdocs.ginger.GingerCoreNET
         {
             mWorkSpace = new WorkSpace();
             mWorkSpace.EventHandler = WSEH;
+
+
         }
 
         public SolutionRepository SolutionRepository;

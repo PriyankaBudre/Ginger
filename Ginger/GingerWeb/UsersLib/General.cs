@@ -127,6 +127,11 @@ namespace GingerWeb.UsersLib
                 string homePath = Environment.GetEnvironmentVariable("HOME");
                 localFolder = System.IO.Path.Combine(homePath, "Ginger");
             }
+            else if (GingerUtils.OperatingSystem.IsMacOS())
+            {
+                string homePath = Environment.GetEnvironmentVariable("HOME");
+                localFolder = System.IO.Path.Combine(homePath, "Ginger");
+            }
             else
             {
                 throw new Exception("Unknown OS for get ginger Home");

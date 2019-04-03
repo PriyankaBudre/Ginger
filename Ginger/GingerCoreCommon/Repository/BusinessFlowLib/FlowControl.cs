@@ -144,7 +144,7 @@ namespace GingerCore.FlowControlLib
         {
             get
             {
-                IValueExpression ve = RepositoryItemHelper.RepositoryItemFactory.CreateValueExpression(this, nameof(Condition));
+                IValueExpression ve = RepositoryItemHelper.ValueExpressionHelper.CreateValueExpression(this, nameof(Condition));
                 return ve;                
             }
         }
@@ -247,7 +247,7 @@ namespace GingerCore.FlowControlLib
                 Condition = Condition.Replace("Fail", "Failed");
             }
 
-            IValueExpression VE = RepositoryItemHelper.RepositoryItemFactory.CreateValueExpression(ProjEnvironment, BusinessFlow, DSList);  
+            IValueExpression VE = RepositoryItemHelper.ValueExpressionHelper.CreateValueExpression(ProjEnvironment, BusinessFlow, DSList);  
             VE.Value = Condition;
             
             foreach (ActReturnValue ARC in act.ReturnValues)
@@ -290,7 +290,7 @@ namespace GingerCore.FlowControlLib
                 Condition = Condition.Replace("Fail", "Failed");
             }
 
-            IValueExpression VE = RepositoryItemHelper.RepositoryItemFactory.CreateValueExpression(ProjEnvironment, BusinessFlow,DSList);
+            IValueExpression VE = RepositoryItemHelper.ValueExpressionHelper.CreateValueExpression(ProjEnvironment, BusinessFlow,DSList);
             VE.Value = Condition;
 
             
@@ -301,7 +301,7 @@ namespace GingerCore.FlowControlLib
 
         public void CalcualtedValue(BusinessFlow BusinessFlow, Environments.ProjEnvironment ProjEnvironment, ObservableList<DataSourceBase> DSList)
         {
-            IValueExpression VE = RepositoryItemHelper.RepositoryItemFactory.CreateValueExpression(ProjEnvironment, BusinessFlow, DSList);
+            IValueExpression VE = RepositoryItemHelper.ValueExpressionHelper.CreateValueExpression(ProjEnvironment, BusinessFlow, DSList);
             VE.Value = Value;
             ValueCalculated = VE.ValueCalculated;
         }

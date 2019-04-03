@@ -43,9 +43,6 @@ namespace Amdocs.Ginger.Common
         //BusinessFlow CreateBusinessFlow();
         //ObservableList<BusinessFlow> GetListofBusinessFlow();
 
-        IValueExpression CreateValueExpression(ProjEnvironment mProjEnvironment, BusinessFlow mBusinessFlow);
-        IValueExpression CreateValueExpression(ProjEnvironment mProjEnvironment, BusinessFlow mBusinessFlow, object DSList);
-        IValueExpression CreateValueExpression(Object obj, string attr);
 
         // ObservableList<IDatabase> GetDatabaseList();
        
