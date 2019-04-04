@@ -231,7 +231,7 @@ namespace GingerCore.FlowControlLib
 
         public void CalculateCondition(BusinessFlow BusinessFlow, Environments.ProjEnvironment ProjEnvironment, Act act, ObservableList<DataSourceBase> DSList)
         {
-            if (Condition == null)
+            if (string.IsNullOrEmpty(Condition))
             {
                 ConditionCalculated = "";
                 return;

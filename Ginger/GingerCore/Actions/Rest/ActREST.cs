@@ -275,27 +275,23 @@ namespace GingerCore.Actions.REST
             if (AcceptAllSSLCertificate == true)
             {
                 ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(
-                 delegate
-                 {
-                     return true;
-                 }
+                     delegate
+                     {
+                         return true;
+                     }
                  );
             }
-
 
             switch (SecurityType)
             {
                 case eSercurityType.None:
-
                     break;
                 case eSercurityType.Ssl3:
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
                     break;
-
                 case eSercurityType.Tls:
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
                     break;
-
                 case eSercurityType.Tls11:
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;
                     break;
@@ -304,9 +300,7 @@ namespace GingerCore.Actions.REST
                     break;
                 default:
                     throw new NotSupportedException("The Configured secutrity type is not supported");
-
             }
-
 
             try
             {
@@ -370,9 +364,7 @@ namespace GingerCore.Actions.REST
 
                 switch (CookieMode) //moved
                 {
-
                     case eCookieMode.Session:
-
                         WebReq.CookieContainer = new CookieContainer();
                         foreach (Cookie cooki in _sessionCokkiesDic.Values)
                         {
@@ -387,9 +379,7 @@ namespace GingerCore.Actions.REST
                             WebReq.CookieContainer.Add(domainName, ck);
                         }
                         break;
-
                     case eCookieMode.None:
-
                         break;
                     case eCookieMode.New:
                         _sessionCokkiesDic.Clear();
@@ -401,7 +391,6 @@ namespace GingerCore.Actions.REST
                 //Not sending data on a get request 
                 if (RequestType != eRequestType.GET)
                 {
-
                     if (ContentType == eContentType.JSon)
                     {
                         WebReq.ContentType = "application/json";
@@ -412,8 +401,6 @@ namespace GingerCore.Actions.REST
                         WebReq.Method = WebRequestMethods.Http.Post;
                         WebReq.Headers.Add("X-Http-Method-Override", "PATCH");
                     }
-
-
 
                     string req = HttpUtility.UrlEncode(RequestBody.Value);
                     if (ReqHttpVersion == eHttpVersion.HTTPV10)
@@ -455,14 +442,11 @@ namespace GingerCore.Actions.REST
                         base.Status=Amdocs.Ginger.CoreNET.Execution.eRunStatus.Failed;
                         base.Error = WE.Message;
                     }
-
-
                 }
                 if (CookieMode != eCookieMode.None)
                 {
                     foreach (Cookie cooki in WebReqResponse.Cookies)
                     {
-
                         if (_sessionCokkiesDic.Keys.Contains(cooki.Name) == false)
                         {
                             _sessionCokkiesDic.Add(cooki.Name, cooki);
@@ -479,7 +463,6 @@ namespace GingerCore.Actions.REST
                         {
                             foreach(string httpCookie in  WebReqResponse.Headers.GetValues(k))
                             {
-
                                 String[] cookiearray = httpCookie.Split(new char[] {';'}, 3);
                                 String[] cookiearray2 = cookiearray[0].Split(new char[] { '=' }, 2);
 
@@ -510,17 +493,11 @@ namespace GingerCore.Actions.REST
                                         if (cks.Path.StartsWith("http://") || cks.Path.StartsWith("https://"))
                                         {
                                             domainName = new Uri(cks.Path);
-
                                         }
-
                                         else
                                         {
                                             domainName = new Uri("http://"+ cks.Path);
                                         }
-
-
-
-
                                         cks.Domain = domainName.Host;
                                     }
                                 }
@@ -546,7 +523,6 @@ namespace GingerCore.Actions.REST
                         }
                     }
 
-
                 }
 
                 string resp = string.Empty;
@@ -554,8 +530,8 @@ namespace GingerCore.Actions.REST
                 if (ResponseContentType != eContentType.PDF)
                 {
                     //TODO: check if UTF8 is good for all
-                 StreamReader reader = new StreamReader(WebReqResponse.GetResponseStream(), Encoding.UTF8);                                  
-                 Reporter.ToLog(eLogLevel.DEBUG, "Response");
+                    StreamReader reader = new StreamReader(WebReqResponse.GetResponseStream(), Encoding.UTF8);                                  
+                    Reporter.ToLog(eLogLevel.DEBUG, "Response");
 
                     resp = reader.ReadToEnd();
                     Reporter.ToLog(eLogLevel.DEBUG, resp);
@@ -572,12 +548,12 @@ namespace GingerCore.Actions.REST
                     memoryStream.Close();
                 }
 
-
                 if (RestRequestSave==true && RequestType!=eRequestType.GET)
                 {
                     string fileName= createRequestOrResponseXMLInFolder("Request", ReqBody, ContentType);
                     AddOrUpdateReturnParamActual("Saved Request File Name", fileName);
                 }
+
                 if (RestResponseSave == true)
                 {
                     if (ResponseContentType != eContentType.PDF)
@@ -591,12 +567,12 @@ namespace GingerCore.Actions.REST
                     }
                 }
 
-
                 AddOrUpdateReturnParamActual("Respose", resp);
                 if(  String.IsNullOrEmpty(resp))
                 {
                     return;
                 }
+
                 XmlDocument doc=null;
                 if (ResponseContentType == eContentType.JSon)
                 {
@@ -615,7 +591,6 @@ namespace GingerCore.Actions.REST
                             }
                         }
 
-
                         if (((resp[0]=='[')&& (resp[resp.Length-1] ==']')))
                         {
                             doc = Newtonsoft.Json.JsonConvert.DeserializeXmlNode("{\"root\":" + resp + "}", "root");
@@ -625,14 +600,12 @@ namespace GingerCore.Actions.REST
                             doc= Newtonsoft.Json.JsonConvert.DeserializeXmlNode(resp, "root");
                         }
 
-
                         List<General.XmlNodeItem> outputTagsList = new List<General.XmlNodeItem>();
                         outputTagsList = GingerCore.General.GetXMLNodesItems(doc);
                         foreach (General.XmlNodeItem outputItem in outputTagsList)
                         {
                             this.AddOrUpdateReturnParamActualWithPath(outputItem.param, outputItem.value, outputItem.path);
                         }
-
                     }
                     else
                     {
@@ -647,7 +620,6 @@ namespace GingerCore.Actions.REST
                     }
                     // Console.WriteLine(doc.);
                 }
-
                 else if (ResponseContentType == eContentType.XML)
                 {
                     doc = new XmlDocument();
@@ -659,7 +631,6 @@ namespace GingerCore.Actions.REST
                     {
                         this.AddOrUpdateReturnParamActualWithPath(outputItem.param, outputItem.value, outputItem.path);
                     }
-
                 }
                 //    XMLProcessor x = new XMLProcessor();
                 // string s = x
@@ -737,18 +708,15 @@ namespace GingerCore.Actions.REST
             else
             {
                 if (CT == eContentType.JSon)
-
                 {
                     fileExtension = "json";
                 }
-
                 else
                 {
                     fileExtension = "txt";
                 }
-
-                 fileName = CreateFileName(fileType, fileExtension);
-               File.WriteAllText(Path.Combine(DirectoryPath, fileName), fileContent);
+                fileName = CreateFileName(fileType, fileExtension);
+                File.WriteAllText(Path.Combine(DirectoryPath, fileName), fileContent);
             }
 
             return fileName;
@@ -807,14 +775,11 @@ namespace GingerCore.Actions.REST
                         WebReq.Referer = httpHeader.ValueForDriver;
                         break;
                     case "":
-
                         break;
                     default:
                         WebReq.Headers.Add(httpHeader.Param, httpHeader.ValueForDriver);
                         break;
                 }
-
-
 
             }
 
@@ -826,7 +791,6 @@ namespace GingerCore.Actions.REST
             string NewReqBody = ReqBody;
             foreach (ActInputValue AIV in AR.DynamicElements)
             {
-
                 string NewValue = AIV.ValueForDriver;
 
                 if (String.IsNullOrEmpty(NewValue))
@@ -836,10 +800,9 @@ namespace GingerCore.Actions.REST
                     NewValue = AIV.ValueForDriver;
                 }
                 NewReqBody = NewReqBody.Replace(AIV.Param, NewValue);
-
-
             }
             return NewReqBody;
         }
+
     }
 }

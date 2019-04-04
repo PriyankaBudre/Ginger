@@ -20,6 +20,7 @@ using Amdocs.Ginger.Common;
 using Amdocs.Ginger.Common.GeneralLib;
 using Amdocs.Ginger.CoreNET.Execution;
 using Amdocs.Ginger.CoreNET.RosLynLib.Refrences;
+using Amdocs.Ginger.CoreNET.ValueExpressionLib;
 using Amdocs.Ginger.Repository;
 using Ginger;
 using Ginger.Run;
@@ -48,7 +49,7 @@ namespace amdocs.ginger.GingerCoreNET
             mWorkSpace = new WorkSpace();
             mWorkSpace.EventHandler = WSEH;
 
-
+            RepositoryItemHelper.ValueExpressionHelper = new ValueExpressionHelper();
         }
 
         public SolutionRepository SolutionRepository;
